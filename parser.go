@@ -13,46 +13,42 @@ import (
 )
 
 // Parser is basically a runtime that holds a raw changelog content,
-// key file margins, filesystem backend and other attributes.
+// key file Margins, filesystem backend and other attributes.
 type Parser struct {
 	Filepath   string
-	filesystem afero.Fs
+	Filesystem afero.Fs
 	Buffer     []string
-	margins    struct {
-		lines      []int
-		title      *int
-		unreleased *int
-		releases   []int
-		links      []int
-		added      []int
-		changed    []int
-		deprecated []int
-		removed    []int
-		fixed      []int
-		security   []int
+	Margins    struct {
+		Lines      []int
+		Title      *int
+		Unreleased *int
+		Releases   []int
+		Links      []int
+		Added      []int
+		Changed    []int
+		Deprecated []int
+		Removed    []int
+		Fixed      []int
+		Security   []int
 	}
 }
 
 // NewParser creates a new Changelog Parser.
-//
-// *`filepath` is validated for readability.*
 func NewParser(filepath string) (*Parser, error) {
 	return NewParserWithFilesystem(afero.NewOsFs(), filepath)
 }
 
 // NewParser creates a new Changelog Parser using non default (OS) filesystem.
 // Possible options for `filesystems` are: [`afero.NewOsFs()`,`afero.NewMemMapFs()`]
-//
-// *`filepath` is validated*
 func NewParserWithFilesystem(filesystem afero.Fs, filepath string) (*Parser, error) {
-	_, err := os.Stat(filepath)
-	if os.IsNotExist(err) || os.IsPermission(err) {
-		return nil, errors.Wrapf(err, "error accessing a file %v", filepath)
+	_, err := filesystem.Stat(filepath)
+	if os.IsNotExist(err) {
+		return nil, errors.Wrapf(err, "file %v not found", filepath)
 	}
 
 	return &Parser{
 		Filepath:   filepath,
-		filesystem: filesystem}, nil
+		Filesystem: filesystem}, nil
 }
 
 // Parse a changelog file and return a Changelog struct
@@ -75,7 +71,7 @@ func (p *Parser) Parse() (*Changelog, error) {
 func (p *Parser) loadBuffer() error {
 	lines := make([]string, 0)
 
-	file, err := p.filesystem.Open(p.Filepath)
+	file, err := p.Filesystem.Open(p.Filepath)
 	if err != nil {
 		return err
 	}
@@ -114,45 +110,45 @@ func (p *Parser) identifyMargins() {
 				switch k {
 				case "Title":
 					n := i
-					p.margins.title = &n
+					p.Margins.Title = &n
 				case "UnreleasedTitle":
 					n := i
-					p.margins.unreleased = &n
+					p.Margins.Unreleased = &n
 				case "UnreleasedTitleWithLink":
 					n := i
-					p.margins.unreleased = &n
+					p.Margins.Unreleased = &n
 				case "VersionTitle":
-					p.margins.releases = append(p.margins.releases, i)
+					p.Margins.Releases = append(p.Margins.Releases, i)
 				case "VersionTitleWithLink":
-					p.margins.releases = append(p.margins.releases, i)
+					p.Margins.Releases = append(p.Margins.Releases, i)
 				case "MarkdownUnreleasedTitleLink":
-					p.margins.links = append(p.margins.links, i)
+					p.Margins.Links = append(p.Margins.Links, i)
 				case "MarkdownVersionTitleLink":
-					p.margins.links = append(p.margins.links, i)
+					p.Margins.Links = append(p.Margins.Links, i)
 				case "AddedScope":
-					p.margins.added = append(p.margins.added, i)
+					p.Margins.Added = append(p.Margins.Added, i)
 				case "ChangedScope":
-					p.margins.changed = append(p.margins.changed, i)
+					p.Margins.Changed = append(p.Margins.Changed, i)
 				case "DeprecatedScope":
-					p.margins.deprecated = append(p.margins.deprecated, i)
+					p.Margins.Deprecated = append(p.Margins.Deprecated, i)
 				case "RemovedScope":
-					p.margins.removed = append(p.margins.removed, i)
+					p.Margins.Removed = append(p.Margins.Removed, i)
 				case "FixedScope":
-					p.margins.fixed = append(p.margins.fixed, i)
+					p.Margins.Fixed = append(p.Margins.Fixed, i)
 				case "SecurityScope":
-					p.margins.security = append(p.margins.security, i)
+					p.Margins.Security = append(p.Margins.Security, i)
 				}
 
-				p.margins.lines = append(p.margins.lines, i)
+				p.Margins.Lines = append(p.Margins.Lines, i)
 			}
 		}
 	}
 }
 
 func (p *Parser) parseTitle() *string {
-	if p.margins.title != nil {
+	if p.Margins.Title != nil {
 		m := regexp.MustCompile(TitleRegex)
-		x := m.ReplaceAllString(p.Buffer[*p.margins.title], "${1}")
+		x := m.ReplaceAllString(p.Buffer[*p.Margins.Title], "${1}")
 		return &x
 	}
 
@@ -160,21 +156,37 @@ func (p *Parser) parseTitle() *string {
 }
 
 func (p *Parser) parseDescription() *string {
-	if p.margins.title != nil {
-		n := p.getNextMarginLine(*p.margins.title)
-		if n != nil {
-			x := strings.Join(trimLeadingAndTrailingEmptyLines(p.Buffer[*p.margins.title+1:*n]), "\n")
-			return &x
+	var o string
+
+	if p.Margins.Title != nil {
+		s := *p.Margins.Title + 1
+		var e *int
+
+		if len(p.Margins.Lines) == 1 {
+			t := len(p.Buffer)
+			e = &t
+		} else {
+			e = p.getNextMarginLine(*p.Margins.Title)
 		}
-	} else if p.margins.lines[0] > 0 {
-		n := p.getNextMarginLine(0)
-		if n == nil {
-			x := strings.Join(trimLeadingAndTrailingEmptyLines(p.Buffer[0:p.margins.lines[0]-1]), "\n")
-			return &x
+
+		o = strings.Join(trimLeadingAndTrailingEmptyLines(p.Buffer[s:*e]), "\n")
+	} else {
+		if len(p.Margins.Lines) != 0 {
+			if p.Margins.Lines[0] != 0 {
+				s := 0
+				e := p.Margins.Lines[0] - 1
+
+				o = strings.Join(trimLeadingAndTrailingEmptyLines(p.Buffer[s:e]), "\n")
+			}
+		} else {
+			o = strings.Join(trimLeadingAndTrailingEmptyLines(p.Buffer), "\n")
 		}
 	}
 
-	return nil
+	if o == "" {
+		return nil
+	}
+	return &o
 }
 
 func trimLeadingAndTrailingEmptyLines(content []string) []string {
@@ -202,24 +214,21 @@ func trimLeadingAndTrailingEmptyLines(content []string) []string {
 }
 
 func (p *Parser) getNextMarginLine(current int) *int {
-	for i, n := range p.margins.lines {
-		if current == n {
-			if i == len(p.margins.lines)-1 {
-				return &current
-			}
+	var o int
 
-			next := p.margins.lines[i+1]
-			return &next
+	for i, n := range p.Margins.Lines {
+		if current == n {
+			o = p.Margins.Lines[i+1]
 		}
 	}
 
-	return nil
+	return &o
 }
 
 func (p *Parser) parseUnreleased() *Release {
-	if p.margins.unreleased != nil {
+	if p.Margins.Unreleased != nil {
 		// NOTE: `parseRelease` function will try to parse from an inline link and fall back to definitions parsing
-		return p.parseRelease(nil, *p.margins.unreleased, UnreleasedTitleWithLinkRegex)
+		return p.parseRelease(nil, *p.Margins.Unreleased, UnreleasedTitleWithLinkRegex)
 	}
 
 	return nil
@@ -233,7 +242,7 @@ func (p *Parser) parseReleases() []*Release {
 		regexp.MustCompile(VersionTitleWithLinkRegex),
 	}
 
-	for _, n := range p.margins.releases {
+	for _, n := range p.Margins.Releases {
 		for _, m := range matchers {
 			/* NOTE: match inline link or definition, but always pass an inline link regex.
 			`parseRelease` function will try to parse from it and fall back to definitions parsing
@@ -250,14 +259,23 @@ func (p *Parser) parseReleases() []*Release {
 
 func (p *Parser) parseRelease(version *string, startingLine int, titleWithLinkRegex string) *Release {
 	release := new(Release)
+	if version != nil {
+		release.Version = version
+	}
 
 	/* NOTE: parse URL
-	Try to parse from title `## [Unreleased]()`/`## [<version>](<url>) - <date>`,
+	Try to parse from title `## [Unreleased](<url>)`/`## [<version>](<url>) - <date>`,
 	otherwise, try to parse the URL from definitions
 	*/
 	m := regexp.MustCompile(titleWithLinkRegex)
 	if m.MatchString(p.Buffer[startingLine]) {
-		x := m.ReplaceAllString(p.Buffer[startingLine], "${7}")
+		var x string
+		if version == nil {
+			x = m.ReplaceAllString(p.Buffer[startingLine], "${2}")
+		} else {
+			x = m.ReplaceAllString(p.Buffer[startingLine], "${7}")
+		}
+
 		release.URL = &x
 	} else {
 		release.URL = p.parseLinkURL(version)
@@ -286,7 +304,7 @@ func (p *Parser) parseLinkURL(version *string) *string {
 		matcher = regexp.MustCompile(MarkdownVersionTitleLinkRegex)
 	}
 
-	for _, n := range p.margins.links {
+	for _, n := range p.Margins.Links {
 		if matcher.MatchString(p.Buffer[n]) {
 			if version == nil {
 				x := matcher.ReplaceAllString(p.Buffer[n], fmt.Sprintf("${%v}", position))
@@ -305,14 +323,14 @@ func (p *Parser) parseLinkURL(version *string) *string {
 
 func (p *Parser) getReleaseEndLine(startingLine int) int {
 	sections := make([]int, 0)
-	if p.margins.title != nil {
-		sections = append(sections, *p.margins.title)
+	if p.Margins.Title != nil {
+		sections = append(sections, *p.Margins.Title)
 	}
-	if p.margins.unreleased != nil {
-		sections = append(sections, *p.margins.unreleased)
+	if p.Margins.Unreleased != nil {
+		sections = append(sections, *p.Margins.Unreleased)
 	}
-	sections = append(sections, p.margins.releases...)
-	sections = append(sections, p.margins.links...)
+	sections = append(sections, p.Margins.Releases...)
+	sections = append(sections, p.Margins.Links...)
 
 	sort.Ints(sections)
 
@@ -341,12 +359,12 @@ func (p *Parser) parseChanges(startingLine, endLine int) *Changes {
 	changes := new(Changes)
 
 	scopeLines := map[string]*int{
-		"Added":      getScopeLine(startingLine, endLine, p.margins.added),
-		"Changed":    getScopeLine(startingLine, endLine, p.margins.changed),
-		"Deprecated": getScopeLine(startingLine, endLine, p.margins.deprecated),
-		"Removed":    getScopeLine(startingLine, endLine, p.margins.removed),
-		"Fixed":      getScopeLine(startingLine, endLine, p.margins.fixed),
-		"Security":   getScopeLine(startingLine, endLine, p.margins.security),
+		"Added":      getScopeLine(startingLine, endLine, p.Margins.Added),
+		"Changed":    getScopeLine(startingLine, endLine, p.Margins.Changed),
+		"Deprecated": getScopeLine(startingLine, endLine, p.Margins.Deprecated),
+		"Removed":    getScopeLine(startingLine, endLine, p.Margins.Removed),
+		"Fixed":      getScopeLine(startingLine, endLine, p.Margins.Fixed),
+		"Security":   getScopeLine(startingLine, endLine, p.Margins.Security),
 	}
 
 	lines := make([]int, 0)
@@ -357,14 +375,20 @@ func (p *Parser) parseChanges(startingLine, endLine int) *Changes {
 	}
 	sort.Ints(lines)
 
-	if len(lines) > 0 {
-		val := strings.Join(trimLeadingAndTrailingEmptyLines(p.Buffer[startingLine:lines[0]]), "\n")
-		if val != "" {
-			changes.Notice = &val
-		}
+	notEmpty := false
+
+	var notice []string
+	if len(lines) == 0 {
+		notice = p.Buffer[startingLine : endLine+1]
+	} else if len(lines) > 0 {
+		notice = p.Buffer[startingLine:lines[0]]
+	}
+	val := strings.Join(trimLeadingAndTrailingEmptyLines(notice), "\n")
+	if val != "" {
+		notEmpty = true
+		changes.Notice = &val
 	}
 
-	notEmpty := false
 	for name, start := range scopeLines {
 		if start != nil {
 			e := getNextItem(*start, lines)

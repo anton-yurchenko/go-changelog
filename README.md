@@ -5,7 +5,7 @@
 [![Release](https://img.shields.io/github/v/release/anton-yurchenko/go-changelog)](https://github.com/anton-yurchenko/go-changelog/releases/latest)
 [![License](https://img.shields.io/github/license/anton-yurchenko/go-changelog)](LICENSE.md)
 
-Golang library for parsing changelog files
+Golang package for parsing a changelog file
 
 ## Overview
 

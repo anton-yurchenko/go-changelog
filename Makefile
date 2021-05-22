@@ -5,7 +5,7 @@ GO_BIN_DIR := $(GOPATH)/bin
 
 test: lint
 	@echo "$(I) unit testing..."
-	@go test $$(go list ./... | grep -v vendor | grep -v mocks) -race -coverprofile=coverage.txt -covermode=atomic
+	@go test -v $$(go list ./... | grep -v vendor | grep -v mocks) -race -coverprofile=coverage.txt -covermode=atomic
 
 .PHONY: lint
 lint: $(GO_LINTER)
