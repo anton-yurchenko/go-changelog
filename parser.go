@@ -3,6 +3,7 @@ package changelog
 import (
 	"bufio"
 	"fmt"
+	"io/fs"
 	"os"
 	"regexp"
 	"sort"
@@ -16,7 +17,7 @@ import (
 // key file Margins, filesystem backend and other attributes.
 type Parser struct {
 	Filepath   string
-	Filesystem afero.Fs
+	Filesystem Filesystem
 	Buffer     []string
 	Margins    struct {
 		Lines      []int
@@ -33,6 +34,11 @@ type Parser struct {
 	}
 }
 
+type Filesystem interface {
+	Stat(string) (fs.FileInfo, error)
+	Open(string) (afero.File, error)
+}
+
 // NewParser creates a new Changelog Parser.
 func NewParser(filepath string) (*Parser, error) {
 	return NewParserWithFilesystem(afero.NewOsFs(), filepath)
@@ -40,7 +46,7 @@ func NewParser(filepath string) (*Parser, error) {
 
 // NewParser creates a new Changelog Parser using non default (OS) filesystem.
 // Possible options for `filesystems` are: [`afero.NewOsFs()`,`afero.NewMemMapFs()`]
-func NewParserWithFilesystem(filesystem afero.Fs, filepath string) (*Parser, error) {
+func NewParserWithFilesystem(filesystem Filesystem, filepath string) (*Parser, error) {
 	_, err := filesystem.Stat(filepath)
 	if os.IsNotExist(err) {
 		return nil, errors.Wrapf(err, "file %v not found", filepath)

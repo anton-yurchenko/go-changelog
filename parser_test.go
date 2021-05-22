@@ -4,6 +4,8 @@ import (
 	"testing"
 
 	"github.com/anton-yurchenko/go-changelog"
+	"github.com/anton-yurchenko/go-changelog/mocks"
+	"github.com/pkg/errors"
 
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
@@ -124,6 +126,12 @@ func TestParser(t *testing.T) {
 					Releases: []*changelog.Release{},
 				},
 				Error: "",
+			},
+		},
+		"Filesystem Error": {
+			Changelog: "",
+			Expected: expected{
+				Error: "error loading a buffer: reason",
 			},
 		},
 		"Title": {
@@ -837,15 +845,30 @@ Notice
 		t.Logf("Test Case %v/%v - %s", counter, len(suite), name)
 
 		// prepare test case
-		if err := afero.WriteFile(fs, "CHANGELOG.md", []byte(test.Changelog), 0644); err != nil {
-			t.Error("error preparing test case: error creating file CHANGELOG.md")
-			continue
-		}
+		var p *changelog.Parser
+		if name == "Filesystem Error" {
+			m := new(mocks.Filesystem)
+			m.On("Stat", "CHANGELOG.md").Return(nil, nil).Once()
+			m.On("Open", "CHANGELOG.md").Return(nil, errors.New("reason")).Once()
 
-		p, err := changelog.NewParserWithFilesystem(fs, "CHANGELOG.md")
-		if err != nil {
-			t.Errorf("error preparing test case: error creating parser: %v", err)
-			continue
+			var err error
+			p, err = changelog.NewParserWithFilesystem(m, "CHANGELOG.md")
+			if err != nil {
+				t.Errorf("error preparing test case: error creating parser: %v", err)
+				continue
+			}
+		} else {
+			err := afero.WriteFile(fs, "CHANGELOG.md", []byte(test.Changelog), 0644)
+			if err != nil {
+				t.Error("error preparing test case: error creating file CHANGELOG.md")
+				continue
+			}
+
+			p, err = changelog.NewParserWithFilesystem(fs, "CHANGELOG.md")
+			if err != nil {
+				t.Errorf("error preparing test case: error creating parser: %v", err)
+				continue
+			}
 		}
 
 		// test
@@ -856,8 +879,10 @@ Notice
 		}
 
 		// cleanup
-		if err := fs.Remove("CHANGELOG.md"); err != nil {
-			t.Errorf("error cleanup: error removing file CHANGELOG.md: %v", err)
+		if name != "Filesystem Error" {
+			if err := fs.Remove("CHANGELOG.md"); err != nil {
+				t.Errorf("error cleanup: error removing file CHANGELOG.md: %v", err)
+			}
 		}
 	}
 }
