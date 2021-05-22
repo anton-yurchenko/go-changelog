@@ -1,6 +1,7 @@
 # go-changelog
 
 [![Go Reference](https://pkg.go.dev/badge/github.com/anton-yurchenko/go-changelog.svg)](https://pkg.go.dev/github.com/anton-yurchenko/go-changelog)
+[![Code Coverage](https://codecov.io/gh/anton-yurchenko/go-changelog/branch/main/graph/badge.svg)](https://codecov.io/gh/anton-yurchenko/go-changelog)
 [![Go Report Card](https://goreportcard.com/badge/github.com/anton-yurchenko/go-changelog)](https://goreportcard.com/report/github.com/anton-yurchenko/go-changelog)
 [![Release](https://img.shields.io/github/v/release/anton-yurchenko/go-changelog)](https://github.com/anton-yurchenko/go-changelog/releases/latest)
 [![License](https://img.shields.io/github/license/anton-yurchenko/go-changelog)](LICENSE.md)

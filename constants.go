@@ -3,10 +3,9 @@ package changelog
 const (
 	// General
 	EmptyLineRegex string = `^\s*$`
-	// URLRegex taken from https://www.zimplicit.se/en/knowledge/validate-url-regular-expression
-	URLRegex    string = `(([\w]+:)?\/\/)?(([\d\w]|%[a-fA-f\d]{2,2})+(:([\d\w]|%[a-fA-f\d]{2,2})+)?@)?([\d\w][-\d\w]{0,253}[\d\w]\.)+[\w]{2,4}(:[\d]+)?(\/([-+_~.\d\w]|%[a-fA-f\d]{2,2})*)*(\?(&amp;?([-+_~.\d\w]|%[a-fA-f\d]{2,2})=?)*)?(#([-+_~.\d\w]|%[a-fA-f\d]{2,2})*)?` // TODO: improve this expression
-	SemVerRegex string = `(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?`
-	DateRegex   string = `[0-9]{4}-[0-9]{2}-[0-9]{2}` // TODO: can be improbed
+	URLRegex       string = `(([\w]+:)?\/\/)?(([\d\w]|%[a-fA-f\d]{2,2})+(:([\d\w]|%[a-fA-f\d]{2,2})+)?@)?([\d\w][-\d\w]{0,253}[\d\w]\.)+[\w]{2,4}(:[\d]+)?(\/([-+_~.\d\w]|%[a-fA-f\d]{2,2})*)*(\?(&amp;?([-+_~.\d\w]|%[a-fA-f\d]{2,2})=?)*)?(#([-+_~.\d\w]|%[a-fA-f\d]{2,2})*)?`
+	SemVerRegex    string = `(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?`
+	DateRegex      string = `([1-2][0-9][0-9][0-9])-([1-9]|[0][1-9]|[1][0-2])-([1-9]|[0][1-9]|[1-2][0-9]?|[3][0-1]?)`
 	// Margins
 	TitleRegex                       string = `^#\s*(?P<title>\S*)\s*$`
 	UnreleasedTitleRegex             string = `^## \[(?P<title>Unreleased)\]$`
