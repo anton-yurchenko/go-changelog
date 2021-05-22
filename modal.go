@@ -1,5 +1,7 @@
 package changelog
 
+import "time"
+
 // Changelog reflects content of a complete changelog file
 type Changelog struct {
 	Title       *string
@@ -11,6 +13,7 @@ type Changelog struct {
 // Release is a single version
 type Release struct {
 	Version *string
+	Date    *time.Time
 	URL     *string
 	Changes *Changes
 }

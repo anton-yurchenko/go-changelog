@@ -10,8 +10,8 @@ const (
 	TitleRegex                       string = `^#\s*(?P<title>\S*)\s*$`
 	UnreleasedTitleRegex             string = `^## \[(?P<title>Unreleased)\]$`
 	UnreleasedTitleWithLinkRegex     string = `^## \[(?P<title>Unreleased)\]\((?P<url>` + URLRegex + `)\)$`
-	VersionTitleRegex                string = `^## \[(?P<version>` + SemVerRegex + `)\] - ` + DateRegex + `$`
-	VersionTitleWithLinkRegex        string = `^## \[(?P<version>` + SemVerRegex + `)\]\((?P<url>` + URLRegex + `)\) - ` + DateRegex + `$`
+	VersionTitleRegex                string = `^## \[(?P<version>` + SemVerRegex + `)\] - (?P<date>` + DateRegex + `)$`
+	VersionTitleWithLinkRegex        string = `^## \[(?P<version>` + SemVerRegex + `)\]\((?P<url>` + URLRegex + `)\) - (?P<date>` + DateRegex + `)$`
 	MarkdownUnreleasedTitleLinkRegex string = `^\[(?P<title>Unreleased)\]: (?P<url>` + URLRegex + `)$`
 	MarkdownVersionTitleLinkRegex    string = `^\[(?P<version>` + SemVerRegex + `)\]: (?P<url>` + URLRegex + `)$`
 	// Scopes

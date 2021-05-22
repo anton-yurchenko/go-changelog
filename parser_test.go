@@ -2,6 +2,7 @@ package changelog_test
 
 import (
 	"testing"
+	"time"
 
 	"github.com/anton-yurchenko/go-changelog"
 	"github.com/anton-yurchenko/go-changelog/mocks"
@@ -17,6 +18,15 @@ func stringP(v string) *string {
 
 func sliceOfStringsP(v []string) *[]string {
 	return &v
+}
+
+func dateP(v string) *time.Time {
+	t, err := time.Parse("2006-01-02", v)
+	if err != nil {
+		return nil
+	}
+
+	return &t
 }
 
 func TestNewParserWithFilesystem(t *testing.T) {
@@ -482,6 +492,7 @@ this:
 					Releases: []*changelog.Release{
 						{
 							Version: stringP("0.0.1"),
+							Date:    dateP("2021-05-19"),
 						},
 					},
 				},
@@ -498,6 +509,7 @@ this:
 						{
 							Version: stringP("0.0.1"),
 							URL:     stringP("https://github.com/anton-yurchenko/go-changelog/releases/tag/v0.0.1"),
+							Date:    dateP("2021-05-19"),
 						},
 					},
 				},
@@ -512,6 +524,7 @@ this:
 						{
 							Version: stringP("0.0.1"),
 							URL:     stringP("https://github.com/anton-yurchenko/go-changelog/releases/tag/v0.0.1"),
+							Date:    dateP("2021-05-19"),
 						},
 					},
 				},
@@ -550,6 +563,7 @@ Notice
 					Releases: []*changelog.Release{
 						{
 							Version: stringP("0.0.1"),
+							Date:    dateP("2021-05-19"),
 							Changes: &changelog.Changes{
 								Notice: stringP("Notice"),
 								Added: sliceOfStringsP([]string{
@@ -611,6 +625,7 @@ Notice`,
 						{
 							Version: stringP("0.0.1"),
 							URL:     stringP("https://github.com/anton-yurchenko/go-changelog/releases/tag/v0.0.1"),
+							Date:    dateP("2021-05-19"),
 							Changes: &changelog.Changes{
 								Added: sliceOfStringsP([]string{
 									"Change 1",
@@ -688,6 +703,7 @@ Notice
 						{
 							Version: stringP("0.0.2"),
 							URL:     stringP("https://github.com/anton-yurchenko/go-changelog/compare/v0.0.1...v0.0.2"),
+							Date:    dateP("2021-05-22"),
 							Changes: &changelog.Changes{
 								Notice: stringP("Notice"),
 								Added: sliceOfStringsP([]string{
@@ -719,6 +735,7 @@ Notice
 						{
 							Version: stringP("0.0.1"),
 							URL:     stringP("https://github.com/anton-yurchenko/go-changelog/releases/tag/v0.0.1"),
+							Date:    dateP("2021-05-19"),
 							Changes: &changelog.Changes{
 								Notice: stringP("Notice"),
 								Added: sliceOfStringsP([]string{
@@ -805,6 +822,7 @@ Notice
 						{
 							Version: stringP("0.0.2"),
 							URL:     stringP("https://github.com/anton-yurchenko/go-changelog/compare/v0.0.1...v0.0.2"),
+							Date:    dateP("2021-05-22"),
 							Changes: &changelog.Changes{
 								Notice: stringP("Notice"),
 								Added: sliceOfStringsP([]string{
@@ -820,6 +838,7 @@ Notice
 						{
 							Version: stringP("0.0.1"),
 							URL:     stringP("https://github.com/anton-yurchenko/go-changelog/releases/tag/v0.0.1"),
+							Date:    dateP("2021-05-19"),
 							Changes: &changelog.Changes{
 								Notice: stringP("Notice"),
 								Added: sliceOfStringsP([]string{

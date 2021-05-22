@@ -8,6 +8,7 @@ import (
 	"regexp"
 	"sort"
 	"strings"
+	"time"
 
 	"github.com/pkg/errors"
 	"github.com/spf13/afero"
@@ -277,14 +278,29 @@ func (p *Parser) parseRelease(version *string, startingLine int, titleWithLinkRe
 	if m.MatchString(p.Buffer[startingLine]) {
 		var x string
 		if version == nil {
+			// Unreleased
 			x = m.ReplaceAllString(p.Buffer[startingLine], "${2}")
+			release.Date = nil
 		} else {
+			// Release
 			x = m.ReplaceAllString(p.Buffer[startingLine], "${7}")
 		}
 
 		release.URL = &x
 	} else {
 		release.URL = p.parseLinkURL(version)
+	}
+
+	// NOTE: parse date
+	if version != nil {
+		m1 := regexp.MustCompile(VersionTitleRegex)
+		m2 := regexp.MustCompile(VersionTitleWithLinkRegex)
+
+		if m1.MatchString(p.Buffer[startingLine]) {
+			release.Date = parseDate(m1.ReplaceAllString(p.Buffer[startingLine], "${7}"))
+		} else if m2.MatchString(p.Buffer[startingLine]) {
+			release.Date = parseDate(m2.ReplaceAllString(p.Buffer[startingLine], "${23}"))
+		}
 	}
 
 	// NOTE: parse changes
@@ -296,6 +312,15 @@ func (p *Parser) parseRelease(version *string, startingLine int, titleWithLinkRe
 	}
 
 	return release
+}
+
+func parseDate(date string) *time.Time {
+	t, err := time.Parse("2006-01-02", date)
+	if err != nil {
+		return nil
+	}
+
+	return &t
 }
 
 func (p *Parser) parseLinkURL(version *string) *string {
