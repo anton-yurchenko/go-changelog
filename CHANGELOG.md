@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.0] - 2021-05-31
+### Added
+- Output to string methods on changelog struct and its components
+- Support YANKED releases
+- Save changelog to file method
+- New changelog and its components methods
+
 ## [0.0.2] - 2021-05-22
 ### Added
 - Parse release dates
@@ -15,5 +22,6 @@
 _Initial release_
 
 [Unreleased]: https://github.com/anton-yurchenko/go-changelog/compare/v0.0.2...HEAD
+[1.0.0]: https://github.com/anton-yurchenko/go-changelog/compare/v0.0.2...v1.0.0
 [0.0.2]: https://github.com/anton-yurchenko/go-changelog/compare/v0.0.1...v0.0.2
 [0.0.1]: https://github.com/anton-yurchenko/go-changelog/releases/tag/v0.0.1

@@ -241,7 +241,7 @@ func (p *Parser) parseUnreleased() *Release {
 	return nil
 }
 
-func (p *Parser) parseReleases() []*Release {
+func (p *Parser) parseReleases() Releases {
 	releases := make([]*Release, 0)
 
 	matchers := []*regexp.Regexp{
@@ -315,7 +315,7 @@ func (p *Parser) parseRelease(version *string, startingLine int, titleWithLinkRe
 }
 
 func parseDate(date string) *time.Time {
-	t, err := time.Parse("2006-01-02", date)
+	t, err := time.Parse(DateFormat, date)
 	if err != nil {
 		return nil
 	}
