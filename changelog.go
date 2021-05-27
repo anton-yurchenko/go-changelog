@@ -2,9 +2,19 @@ package changelog
 
 import (
 	"fmt"
+	"io/fs"
 	"sort"
 	"strings"
+
+	"github.com/pkg/errors"
+	"github.com/spf13/afero"
 )
+
+type Filesystem interface {
+	Stat(string) (fs.FileInfo, error)
+	Open(string) (afero.File, error)
+	Create(string) (afero.File, error)
+}
 
 // Changelog reflects content of a complete changelog file
 type Changelog struct {
@@ -44,4 +54,26 @@ func (c *Changelog) ToString() string {
 	o = append(o, defs...)
 
 	return strings.Join(o, "\n")
+}
+
+// SaveToFile formats the changelog struct according to a predefined format
+// and prints it to file.
+// Possible options for `filesystems` are: [`afero.NewOsFs()`,`afero.NewMemMapFs()`]
+func (c *Changelog) SaveToFile(filesystem Filesystem, filepath string) error {
+	f, err := filesystem.Create(filepath)
+	if err != nil {
+		return errors.Wrap(err, "error creating a file")
+	}
+	defer f.Close()
+
+	_, err = f.WriteString(c.ToString())
+	if err != nil {
+		return errors.Wrap(err, "error writing to file")
+	}
+
+	if err := f.Sync(); err != nil {
+		return errors.Wrap(err, "error committing file content to disk")
+	}
+
+	return nil
 }

@@ -3,7 +3,6 @@ package changelog
 import (
 	"bufio"
 	"fmt"
-	"io/fs"
 	"os"
 	"regexp"
 	"sort"
@@ -33,11 +32,6 @@ type Parser struct {
 		Fixed      []int
 		Security   []int
 	}
-}
-
-type Filesystem interface {
-	Stat(string) (fs.FileInfo, error)
-	Open(string) (afero.File, error)
 }
 
 // NewParser creates a new Changelog Parser.
