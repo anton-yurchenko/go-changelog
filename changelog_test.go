@@ -266,3 +266,43 @@ func TestNewChangelog(t *testing.T) {
 
 	a.Equal(expected, changelog.NewChangelog())
 }
+
+func TestSetTitle(t *testing.T) {
+	a := assert.New(t)
+
+	t.Log("Test Case 1/1 - Update Title")
+
+	target := &changelog.Changelog{
+		Title:    stringP("changes"),
+		Releases: []*changelog.Release{},
+	}
+
+	expected := &changelog.Changelog{
+		Title:    stringP("changelog"),
+		Releases: []*changelog.Release{},
+	}
+
+	target.SetTitle("changelog")
+
+	a.Equal(expected, target)
+}
+
+func TestSetDescription(t *testing.T) {
+	a := assert.New(t)
+
+	t.Log("Test Case 1/1 - Update Description")
+
+	target := &changelog.Changelog{
+		Description: stringP("description"),
+		Releases:    []*changelog.Release{},
+	}
+
+	expected := &changelog.Changelog{
+		Description: stringP(""),
+		Releases:    []*changelog.Release{},
+	}
+
+	target.SetDescription("")
+
+	a.Equal(expected, target)
+}

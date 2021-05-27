@@ -85,3 +85,11 @@ func NewChangelog() *Changelog {
 
 	return c
 }
+
+func (c *Changelog) SetTitle(title string) {
+	*c.Title = title
+}
+
+func (c *Changelog) SetDescription(description string) {
+	*c.Description = description
+}
