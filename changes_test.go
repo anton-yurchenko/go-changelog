@@ -174,3 +174,21 @@ this:
 		a.Equal(test.Expected, test.Changelog.ToString())
 	}
 }
+
+func TestAddNotice(t *testing.T) {
+	a := assert.New(t)
+
+	t.Log("Test Case 1/1 - Update Notice")
+
+	target := &changelog.Changes{
+		Notice: stringP("notice"),
+	}
+
+	expected := &changelog.Changes{
+		Notice: stringP(""),
+	}
+
+	target.AddNotice("")
+
+	a.Equal(expected, target)
+}

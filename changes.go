@@ -58,3 +58,7 @@ func scopeToString(scope *[]string) string {
 
 	return strings.Join(o, "\n")
 }
+
+func (c *Changes) AddNotice(notice string) {
+	*c.Notice = notice
+}
