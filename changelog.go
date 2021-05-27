@@ -3,6 +3,7 @@ package changelog
 import (
 	"fmt"
 	"io/fs"
+	"net/url"
 	"sort"
 	"strings"
 
@@ -92,4 +93,22 @@ func (c *Changelog) SetTitle(title string) {
 
 func (c *Changelog) SetDescription(description string) {
 	*c.Description = description
+}
+
+func (c *Changelog) SetUnreleasedURL(link string) error {
+	u, err := url.Parse(link)
+	if err != nil {
+		return err
+	}
+	urlString := u.String()
+
+	if c.Unreleased == nil {
+		c.Unreleased = &Release{
+			URL: &urlString,
+		}
+	} else {
+		*c.Unreleased.URL = link
+	}
+
+	return nil
 }

@@ -273,13 +273,11 @@ func TestSetTitle(t *testing.T) {
 	t.Log("Test Case 1/1 - Update Title")
 
 	target := &changelog.Changelog{
-		Title:    stringP("changes"),
-		Releases: []*changelog.Release{},
+		Title: stringP("changes"),
 	}
 
 	expected := &changelog.Changelog{
-		Title:    stringP("changelog"),
-		Releases: []*changelog.Release{},
+		Title: stringP("changelog"),
 	}
 
 	target.SetTitle("changelog")
@@ -294,15 +292,57 @@ func TestSetDescription(t *testing.T) {
 
 	target := &changelog.Changelog{
 		Description: stringP("description"),
-		Releases:    []*changelog.Release{},
 	}
 
 	expected := &changelog.Changelog{
 		Description: stringP(""),
-		Releases:    []*changelog.Release{},
 	}
 
 	target.SetDescription("")
 
 	a.Equal(expected, target)
+}
+
+func TestSetUnreleasedURL(t *testing.T) {
+	a := assert.New(t)
+
+	type test struct {
+		Changelog *changelog.Changelog
+		URL       string
+		Expected  string
+	}
+
+	suite := map[string]test{
+		"Valid URL": {
+			Changelog: new(changelog.Changelog),
+			URL:       "https://github.com/anton-yurchenko/go-changelog",
+			Expected:  "",
+		},
+		"Invalid URL": {
+			Changelog: new(changelog.Changelog),
+			URL:       "github.com/sdf\as",
+			Expected:  "parse \"github.com/sdf\\as\": net/url: invalid control character in URL",
+		},
+		"Replace URL": {
+			Changelog: &changelog.Changelog{
+				Unreleased: &changelog.Release{
+					URL: stringP("gitlab.com"),
+				},
+			},
+			URL:      "github.com",
+			Expected: "",
+		},
+	}
+
+	var counter int
+	for name, test := range suite {
+		counter++
+		t.Logf("Test Case %v/%v - %s", counter, len(suite), name)
+
+		if test.Expected != "" {
+			a.EqualError(test.Changelog.SetUnreleasedURL(test.URL), test.Expected)
+		} else {
+			a.Equal(nil, test.Changelog.SetUnreleasedURL(test.URL))
+		}
+	}
 }
