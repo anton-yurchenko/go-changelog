@@ -77,3 +77,11 @@ func (c *Changelog) SaveToFile(filesystem Filesystem, filepath string) error {
 
 	return nil
 }
+
+// NewChangelog returns an empty changelog
+func NewChangelog() *Changelog {
+	c := new(Changelog)
+	c.Releases = make(Releases, 0)
+
+	return c
+}

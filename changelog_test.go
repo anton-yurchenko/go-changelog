@@ -254,3 +254,15 @@ func TestSaveToFile(t *testing.T) {
 		}
 	}
 }
+
+func TestNewChangelog(t *testing.T) {
+	a := assert.New(t)
+
+	t.Log("Test Case 1/1 - Create New Changelog")
+
+	expected := &changelog.Changelog{
+		Releases: []*changelog.Release{},
+	}
+
+	a.Equal(expected, changelog.NewChangelog())
+}
