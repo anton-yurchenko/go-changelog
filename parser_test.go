@@ -856,6 +856,71 @@ Notice
 				Error: "",
 			},
 		},
+		"Changelog - Yanked Releases": {
+			Changelog: `## [0.0.2] - 2021-05-22 [YANKED]
+
+Notice
+
+### Added
+- Change 1
+- Change 2
+			
+### Changed
+- Change 3
+- Change 4
+
+## [0.0.1](https://github.com/anton-yurchenko/go-changelog/releases/tag/v0.0.1) - 2021-05-19 [YANKED]
+Notice
+### Added
+- Change 1
+- Change 2
+### Security
+- Change 11
+- Change 12
+
+[0.0.2]: https://github.com/anton-yurchenko/go-changelog/compare/v0.0.1...v0.0.2`,
+			Expected: expected{
+				Result: &changelog.Changelog{
+					Releases: []*changelog.Release{
+						{
+							Version: stringP("0.0.2"),
+							URL:     stringP("https://github.com/anton-yurchenko/go-changelog/compare/v0.0.1...v0.0.2"),
+							Date:    dateP("2021-05-22"),
+							Yanked:  true,
+							Changes: &changelog.Changes{
+								Notice: stringP("Notice"),
+								Added: sliceOfStringsP([]string{
+									"Change 1",
+									"Change 2",
+								}),
+								Changed: sliceOfStringsP([]string{
+									"Change 3",
+									"Change 4",
+								}),
+							},
+						},
+						{
+							Version: stringP("0.0.1"),
+							URL:     stringP("https://github.com/anton-yurchenko/go-changelog/releases/tag/v0.0.1"),
+							Date:    dateP("2021-05-19"),
+							Yanked:  true,
+							Changes: &changelog.Changes{
+								Notice: stringP("Notice"),
+								Added: sliceOfStringsP([]string{
+									"Change 1",
+									"Change 2",
+								}),
+								Security: sliceOfStringsP([]string{
+									"Change 11",
+									"Change 12",
+								}),
+							},
+						},
+					},
+				},
+				Error: "",
+			},
+		},
 	}
 
 	var counter int

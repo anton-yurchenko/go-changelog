@@ -298,8 +298,16 @@ func (p *Parser) parseRelease(version *string, startingLine int, titleWithLinkRe
 
 		if m1.MatchString(p.Buffer[startingLine]) {
 			release.Date = parseDate(m1.ReplaceAllString(p.Buffer[startingLine], "${7}"))
+
+			if m1.ReplaceAllString(p.Buffer[startingLine], "${11}") == " [YANKED]" {
+				release.Yanked = true
+			}
 		} else if m2.MatchString(p.Buffer[startingLine]) {
 			release.Date = parseDate(m2.ReplaceAllString(p.Buffer[startingLine], "${23}"))
+
+			if m2.ReplaceAllString(p.Buffer[startingLine], "${27}") == " [YANKED]" {
+				release.Yanked = true
+			}
 		}
 	}
 

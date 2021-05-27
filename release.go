@@ -10,6 +10,7 @@ import (
 type Release struct {
 	Version *string
 	Date    *time.Time
+	Yanked  bool
 	URL     *string
 	Changes *Changes
 }
