@@ -192,3 +192,121 @@ func TestAddNotice(t *testing.T) {
 
 	a.Equal(expected, target)
 }
+
+func TestAddChange(t *testing.T) {
+	a := assert.New(t)
+
+	type expected struct {
+		Changes *changelog.Changes
+		Error   string
+	}
+	type test struct {
+		Changes  *changelog.Changes
+		Scope    string
+		Change   string
+		Expected expected
+	}
+
+	suite := map[string]test{
+		"Empty": {
+			Changes: new(changelog.Changes),
+			Scope:   "Added",
+			Change:  "",
+			Expected: expected{
+				Changes: new(changelog.Changes),
+				Error:   "",
+			},
+		},
+		"Added Scope": {
+			Changes: new(changelog.Changes),
+			Scope:   "Added",
+			Change:  "change",
+			Expected: expected{
+				Changes: &changelog.Changes{
+					Added: sliceOfStringsP([]string{"change"}),
+				},
+				Error: "",
+			},
+		},
+		"Changed Scope": {
+			Changes: new(changelog.Changes),
+			Scope:   "Changed",
+			Change:  "change",
+			Expected: expected{
+				Changes: &changelog.Changes{
+					Changed: sliceOfStringsP([]string{"change"}),
+				},
+				Error: "",
+			},
+		},
+		"Deprecated Scope": {
+			Changes: new(changelog.Changes),
+			Scope:   "Deprecated",
+			Change:  "change",
+			Expected: expected{
+				Changes: &changelog.Changes{
+					Deprecated: sliceOfStringsP([]string{"change"}),
+				},
+				Error: "",
+			},
+		},
+		"Removed Scope": {
+			Changes: new(changelog.Changes),
+			Scope:   "Removed",
+			Change:  "change",
+			Expected: expected{
+				Changes: &changelog.Changes{
+					Removed: sliceOfStringsP([]string{"change"}),
+				},
+				Error: "",
+			},
+		},
+		"Fixed Scope": {
+			Changes: new(changelog.Changes),
+			Scope:   "Fixed",
+			Change:  "change",
+			Expected: expected{
+				Changes: &changelog.Changes{
+					Fixed: sliceOfStringsP([]string{"change"}),
+				},
+				Error: "",
+			},
+		},
+		"Security Scope": {
+			Changes: new(changelog.Changes),
+			Scope:   "Security",
+			Change:  "change",
+			Expected: expected{
+				Changes: &changelog.Changes{
+					Security: sliceOfStringsP([]string{"change"}),
+				},
+				Error: "",
+			},
+		},
+		"Invalid Scope": {
+			Changes: &changelog.Changes{
+				Security: sliceOfStringsP([]string{"change"}),
+			},
+			Scope:  "Invalid",
+			Change: "change",
+			Expected: expected{
+				Changes: &changelog.Changes{
+					Security: sliceOfStringsP([]string{"change"}),
+				},
+				Error: "unexpected scope: Invalid (supported: [Added,Changed,Deprecated,Removed,Fixed,Security])",
+			},
+		},
+	}
+
+	var counter int
+	for name, test := range suite {
+		counter++
+		t.Logf("Test Case %v/%v - %s", counter, len(suite), name)
+
+		err := test.Changes.AddChange(test.Scope, test.Change)
+		a.Equal(test.Expected.Changes, test.Changes)
+		if test.Expected.Error != "" {
+			a.EqualError(err, test.Expected.Error)
+		}
+	}
+}
