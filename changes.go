@@ -68,8 +68,8 @@ func (c *Changes) AddNotice(notice string) {
 func (c *Changes) AddChange(scope string, change string) error {
 	changesList := []string{change}
 
-	switch scope {
-	case "Added":
+	switch strings.ToLower(scope) {
+	case "added":
 		if change == "" {
 			return nil
 		}
@@ -79,7 +79,7 @@ func (c *Changes) AddChange(scope string, change string) error {
 		} else {
 			*c.Added = append(*c.Added, change)
 		}
-	case "Changed":
+	case "changed":
 		if change == "" {
 			return nil
 		}
@@ -89,7 +89,7 @@ func (c *Changes) AddChange(scope string, change string) error {
 		} else {
 			*c.Changed = append(*c.Changed, change)
 		}
-	case "Deprecated":
+	case "deprecated":
 		if change == "" {
 			return nil
 		}
@@ -99,7 +99,7 @@ func (c *Changes) AddChange(scope string, change string) error {
 		} else {
 			*c.Deprecated = append(*c.Deprecated, change)
 		}
-	case "Removed":
+	case "removed":
 		if change == "" {
 			return nil
 		}
@@ -109,7 +109,7 @@ func (c *Changes) AddChange(scope string, change string) error {
 		} else {
 			*c.Removed = append(*c.Removed, change)
 		}
-	case "Fixed":
+	case "fixed":
 		if change == "" {
 			return nil
 		}
@@ -119,7 +119,7 @@ func (c *Changes) AddChange(scope string, change string) error {
 		} else {
 			*c.Fixed = append(*c.Fixed, change)
 		}
-	case "Security":
+	case "security":
 		if change == "" {
 			return nil
 		}
@@ -130,7 +130,7 @@ func (c *Changes) AddChange(scope string, change string) error {
 			*c.Security = append(*c.Security, change)
 		}
 	default:
-		return errors.New(fmt.Sprintf("unexpected scope: %v (supported: [Added,Changed,Deprecated,Removed,Fixed,Security])", scope))
+		return errors.New(fmt.Sprintf("unexpected scope: %v (supported: [added,changed,deprecated,removed,fixed,security])", scope))
 	}
 
 	return nil

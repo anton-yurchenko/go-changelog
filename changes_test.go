@@ -371,14 +371,14 @@ func TestAddChange(t *testing.T) {
 				Changes: &changelog.Changes{
 					Security: sliceOfStringsP([]string{"change"}),
 				},
-				Error: "unexpected scope: Invalid (supported: [Added,Changed,Deprecated,Removed,Fixed,Security])",
+				Error: "unexpected scope: Invalid (supported: [added,changed,deprecated,removed,fixed,security])",
 			},
 		},
 		"Append Empty Added": {
 			Changes: &changelog.Changes{
 				Added: sliceOfStringsP([]string{"previous"}),
 			},
-			Scope:  "Added",
+			Scope:  "added",
 			Change: "",
 			Expected: expected{
 				Changes: &changelog.Changes{
@@ -391,7 +391,7 @@ func TestAddChange(t *testing.T) {
 			Changes: &changelog.Changes{
 				Changed: sliceOfStringsP([]string{"previous"}),
 			},
-			Scope:  "Changed",
+			Scope:  "changed",
 			Change: "",
 			Expected: expected{
 				Changes: &changelog.Changes{
@@ -404,7 +404,7 @@ func TestAddChange(t *testing.T) {
 			Changes: &changelog.Changes{
 				Deprecated: sliceOfStringsP([]string{"previous"}),
 			},
-			Scope:  "Deprecated",
+			Scope:  "deprecated",
 			Change: "",
 			Expected: expected{
 				Changes: &changelog.Changes{
@@ -417,7 +417,7 @@ func TestAddChange(t *testing.T) {
 			Changes: &changelog.Changes{
 				Removed: sliceOfStringsP([]string{"previous"}),
 			},
-			Scope:  "Removed",
+			Scope:  "removed",
 			Change: "",
 			Expected: expected{
 				Changes: &changelog.Changes{
@@ -430,7 +430,7 @@ func TestAddChange(t *testing.T) {
 			Changes: &changelog.Changes{
 				Fixed: sliceOfStringsP([]string{"previous"}),
 			},
-			Scope:  "Fixed",
+			Scope:  "fixed",
 			Change: "",
 			Expected: expected{
 				Changes: &changelog.Changes{
@@ -443,7 +443,7 @@ func TestAddChange(t *testing.T) {
 			Changes: &changelog.Changes{
 				Security: sliceOfStringsP([]string{"previous"}),
 			},
-			Scope:  "Security",
+			Scope:  "security",
 			Change: "",
 			Expected: expected{
 				Changes: &changelog.Changes{

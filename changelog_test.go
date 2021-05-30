@@ -385,7 +385,7 @@ func TestAddUnreleasedChange(t *testing.T) {
 				Changelog: &changelog.Changelog{
 					Unreleased: new(changelog.Release),
 				},
-				Error: "unexpected scope: Invalid (supported: [Added,Changed,Deprecated,Removed,Fixed,Security])",
+				Error: "unexpected scope: Invalid (supported: [added,changed,deprecated,removed,fixed,security])",
 			},
 		},
 		"Missing Unreleased Field": {
