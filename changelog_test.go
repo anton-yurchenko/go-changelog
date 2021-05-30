@@ -432,3 +432,48 @@ func TestAddUnreleasedChange(t *testing.T) {
 		}
 	}
 }
+
+func TestGetRelease(t *testing.T) {
+	a := assert.New(t)
+
+	type test struct {
+		Changelog *changelog.Changelog
+		Release   *changelog.Release
+		Version   string
+	}
+
+	suite := map[string]test{
+		"Not Found": {
+			Changelog: changelog.NewChangelog(),
+			Version:   "1.0.0",
+		},
+		"Found": {
+			Changelog: &changelog.Changelog{
+				Releases: changelog.Releases{
+					{
+						Version: stringP("1.1.0"),
+					},
+					{
+						Version: stringP("1.0.0"),
+					},
+					{
+						Version: stringP("0.1.0"),
+					},
+				},
+			},
+			Release: &changelog.Release{
+				Version: stringP("1.0.0"),
+			},
+			Version: "1.0.0",
+		},
+	}
+
+	var counter int
+	for name, test := range suite {
+		counter++
+		t.Logf("Test Case %v/%v - %s", counter, len(suite), name)
+
+		r := test.Changelog.GetRelease(test.Version)
+		a.Equal(test.Release, r)
+	}
+}

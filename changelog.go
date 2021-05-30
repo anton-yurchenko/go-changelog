@@ -126,3 +126,13 @@ func (c *Changelog) AddUnreleasedChange(scope string, change string) error {
 
 	return c.Unreleased.Changes.AddChange(scope, change)
 }
+
+func (c *Changelog) GetRelease(version string) *Release {
+	for _, r := range c.Releases {
+		if *r.Version == version {
+			return r
+		}
+	}
+
+	return nil
+}
