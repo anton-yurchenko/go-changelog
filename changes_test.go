@@ -217,6 +217,84 @@ func TestAddChange(t *testing.T) {
 				Error:   "",
 			},
 		},
+		"Append Added": {
+			Changes: &changelog.Changes{
+				Added: sliceOfStringsP([]string{"previous"}),
+			},
+			Scope:  "Added",
+			Change: "change",
+			Expected: expected{
+				Changes: &changelog.Changes{
+					Added: sliceOfStringsP([]string{"previous", "change"}),
+				},
+				Error: "",
+			},
+		},
+		"Append Changed": {
+			Changes: &changelog.Changes{
+				Changed: sliceOfStringsP([]string{"previous"}),
+			},
+			Scope:  "Changed",
+			Change: "change",
+			Expected: expected{
+				Changes: &changelog.Changes{
+					Changed: sliceOfStringsP([]string{"previous", "change"}),
+				},
+				Error: "",
+			},
+		},
+		"Append Deprecated": {
+			Changes: &changelog.Changes{
+				Deprecated: sliceOfStringsP([]string{"previous"}),
+			},
+			Scope:  "Deprecated",
+			Change: "change",
+			Expected: expected{
+				Changes: &changelog.Changes{
+					Deprecated: sliceOfStringsP([]string{"previous", "change"}),
+				},
+				Error: "",
+			},
+		},
+		"Append Removed": {
+			Changes: &changelog.Changes{
+				Removed: sliceOfStringsP([]string{"previous"}),
+			},
+			Scope:  "Removed",
+			Change: "change",
+			Expected: expected{
+				Changes: &changelog.Changes{
+					Removed: sliceOfStringsP([]string{"previous", "change"}),
+				},
+				Error: "",
+			},
+		},
+		"Append Fixed": {
+			Changes: &changelog.Changes{
+				Fixed: sliceOfStringsP([]string{"previous"}),
+			},
+			Scope:  "Fixed",
+			Change: "change",
+			Expected: expected{
+				Changes: &changelog.Changes{
+					Fixed: sliceOfStringsP([]string{"previous", "change"}),
+				},
+				Error: "",
+			},
+		},
+		"Append Security": {
+			Changes: &changelog.Changes{
+				Security: sliceOfStringsP([]string{"previous"}),
+			},
+			Scope:  "Security",
+			Change: "change",
+			Expected: expected{
+				Changes: &changelog.Changes{
+					Security: sliceOfStringsP([]string{"previous", "change"}),
+				},
+				Error: "",
+			},
+		},
 		"Added Scope": {
 			Changes: new(changelog.Changes),
 			Scope:   "Added",
@@ -294,6 +372,84 @@ func TestAddChange(t *testing.T) {
 					Security: sliceOfStringsP([]string{"change"}),
 				},
 				Error: "unexpected scope: Invalid (supported: [Added,Changed,Deprecated,Removed,Fixed,Security])",
+			},
+		},
+		"Append Empty Added": {
+			Changes: &changelog.Changes{
+				Added: sliceOfStringsP([]string{"previous"}),
+			},
+			Scope:  "Added",
+			Change: "",
+			Expected: expected{
+				Changes: &changelog.Changes{
+					Added: sliceOfStringsP([]string{"previous"}),
+				},
+				Error: "",
+			},
+		},
+		"Append Empty Changed": {
+			Changes: &changelog.Changes{
+				Changed: sliceOfStringsP([]string{"previous"}),
+			},
+			Scope:  "Changed",
+			Change: "",
+			Expected: expected{
+				Changes: &changelog.Changes{
+					Changed: sliceOfStringsP([]string{"previous"}),
+				},
+				Error: "",
+			},
+		},
+		"Append Empty Deprecated": {
+			Changes: &changelog.Changes{
+				Deprecated: sliceOfStringsP([]string{"previous"}),
+			},
+			Scope:  "Deprecated",
+			Change: "",
+			Expected: expected{
+				Changes: &changelog.Changes{
+					Deprecated: sliceOfStringsP([]string{"previous"}),
+				},
+				Error: "",
+			},
+		},
+		"Append Empty Removed": {
+			Changes: &changelog.Changes{
+				Removed: sliceOfStringsP([]string{"previous"}),
+			},
+			Scope:  "Removed",
+			Change: "",
+			Expected: expected{
+				Changes: &changelog.Changes{
+					Removed: sliceOfStringsP([]string{"previous"}),
+				},
+				Error: "",
+			},
+		},
+		"Append Empty Fixed": {
+			Changes: &changelog.Changes{
+				Fixed: sliceOfStringsP([]string{"previous"}),
+			},
+			Scope:  "Fixed",
+			Change: "",
+			Expected: expected{
+				Changes: &changelog.Changes{
+					Fixed: sliceOfStringsP([]string{"previous"}),
+				},
+				Error: "",
+			},
+		},
+		"Append Empty Security": {
+			Changes: &changelog.Changes{
+				Security: sliceOfStringsP([]string{"previous"}),
+			},
+			Scope:  "Security",
+			Change: "",
+			Expected: expected{
+				Changes: &changelog.Changes{
+					Security: sliceOfStringsP([]string{"previous"}),
+				},
+				Error: "",
 			},
 		},
 	}
