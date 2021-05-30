@@ -346,3 +346,89 @@ func TestSetUnreleasedURL(t *testing.T) {
 		}
 	}
 }
+
+func TestAddUnreleasedChange(t *testing.T) {
+	a := assert.New(t)
+
+	type expected struct {
+		Changelog *changelog.Changelog
+		Error     string
+	}
+	type test struct {
+		Changelog *changelog.Changelog
+		Scope     string
+		Change    string
+		Expected  expected
+	}
+
+	suite := map[string]test{
+		"Valid": {
+			Changelog: new(changelog.Changelog),
+			Scope:     "Fixed",
+			Change:    "change",
+			Expected: expected{
+				Changelog: &changelog.Changelog{
+					Unreleased: &changelog.Release{
+						Changes: &changelog.Changes{
+							Fixed: sliceOfStringsP([]string{"change"}),
+						},
+					},
+				},
+				Error: "",
+			},
+		},
+		"Invalid": {
+			Changelog: new(changelog.Changelog),
+			Scope:     "Invalid",
+			Change:    "change",
+			Expected: expected{
+				Changelog: &changelog.Changelog{
+					Unreleased: new(changelog.Release),
+				},
+				Error: "unexpected scope: Invalid (supported: [Added,Changed,Deprecated,Removed,Fixed,Security])",
+			},
+		},
+		"Missing Unreleased Field": {
+			Changelog: new(changelog.Changelog),
+			Scope:     "Fixed",
+			Change:    "",
+			Expected: expected{
+				Changelog: &changelog.Changelog{
+					Unreleased: &changelog.Release{
+						Changes: new(changelog.Changes),
+					},
+				},
+				Error: "",
+			},
+		},
+		"Missing Changes Field": {
+			Changelog: &changelog.Changelog{
+				Unreleased: new(changelog.Release),
+			},
+			Scope:  "Fixed",
+			Change: "",
+			Expected: expected{
+				Changelog: &changelog.Changelog{
+					Unreleased: &changelog.Release{
+						Changes: new(changelog.Changes),
+					},
+				},
+				Error: "",
+			},
+		},
+	}
+
+	var counter int
+	for name, test := range suite {
+		counter++
+		t.Logf("Test Case %v/%v - %s", counter, len(suite), name)
+
+		err := test.Changelog.AddUnreleasedChange(test.Scope, test.Change)
+
+		if test.Expected.Error != "" {
+			a.EqualError(err, test.Expected.Error)
+		} else {
+			a.Equal(test.Expected.Changelog, test.Changelog)
+		}
+	}
+}

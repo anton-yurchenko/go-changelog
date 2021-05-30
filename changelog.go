@@ -112,3 +112,17 @@ func (c *Changelog) SetUnreleasedURL(link string) error {
 
 	return nil
 }
+
+func (c *Changelog) AddUnreleasedChange(scope string, change string) error {
+	if c.Unreleased == nil {
+		c.Unreleased = &Release{
+			Changes: &Changes{},
+		}
+	}
+
+	if c.Unreleased.Changes == nil {
+		c.Unreleased.Changes = new(Changes)
+	}
+
+	return c.Unreleased.Changes.AddChange(scope, change)
+}
