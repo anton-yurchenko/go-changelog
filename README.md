@@ -31,22 +31,24 @@ import (
 )
 
 func main() {
-    changelogContent, err := changelog.NewChangelog("Changelog", "")
+    c := changelog.NewChangelog()
+    c.SetTitle("Changelog")
+    c.SetDescription("This file contains changes of all releases")
+
+    c.AddUnreleasedChange("fixed", []string{"Bug"})
+    c.AddUnreleasedChange("added", []string{"Feature"})
+
+    r, err := c.CreateReleaseFromUnreleased("1.0.0", "https://github.com/anton-yurchenko/go-changelog/releases/tag/v1.0.0", "2021-05-31")
     if err != nil {
         panic(err)
     }
 
-    changelogContent.AddUnreleasedChanges("Fixed", []string{"Bug"})
+    if err := r.AddChange("changed", "User API"); err != nil {
+        panic(err)
+    }
+    r.AddNotice("**This release contains breaking changes**")
 
-    changelogContent.AddRelease("1.0.0", "https://github.com/anton-yurchenko/go-changelog/releases/tag/v1.0.0", "2021-05-19")
-
-    changelogContent.AddReleaseChanges("1.0.0", "Added", []string{
-        "Feature A",
-        "Feature B",
-    })
-
-    changelogContent.SaveToFile("./CHANGELOG-FORMATTED.md")
-    if err != nil {
+    if err := c.SaveToFile("./CHANGELOG.md"); err != nil {
         panic(err)
     }
 }
@@ -63,17 +65,17 @@ import (
 )
 
 func main() {
-    parser, err := changelog.NewParser("./CHANGELOG.md")
+    p, err := changelog.NewParser("./CHANGELOG.md")
     if err != nil {
         panic(err)
     }
 
-    changelogContent, err := parser.Parse()
+    c, err := p.Parse()
     if err != nil {
         panic(err)
     }
 
-    fmt.Printf("Changelog contains %v releases", len(changelogContent.Releases))
+    fmt.Printf("Changelog contains %v releases", c.Releases.Len())
 }
 ```
 
@@ -89,21 +91,24 @@ import (
 )
 
 func main() {
-    parser, err := changelog.NewParser("./CHANGELOG.md")
+    p, err := changelog.NewParser("./CHANGELOG.md")
     if err != nil {
         panic(err)
     }
 
-    changelogContent, err := parser.Parse()
+    c, err := p.Parse()
     if err != nil {
         panic(err)
     }
 
-    if err := changelogContent.YankRelease("1.2.1"); err != nil {
-        panic(err)
+    r := c.GetRelease("1.2.1")
+    if r == nil {
+        panic("Release does not exists")
     }
 
-    changelogContent.SaveToFile("./CHANGELOG.md")
+    r.Yanked = true
+
+    c.SaveToFile("./CHANGELOG.md")
     if err != nil {
         panic(err)
     }

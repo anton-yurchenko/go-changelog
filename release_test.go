@@ -1,6 +1,7 @@
 package changelog_test
 
 import (
+	"fmt"
 	"testing"
 	"time"
 
@@ -96,4 +97,194 @@ this:
 		a.Equal(test.ExpectedString, r)
 		a.Equal(test.ExpectedDefinition, l)
 	}
+}
+
+func TestSetDate(t *testing.T) {
+	a := assert.New(t)
+
+	type expected struct {
+		Release *changelog.Release
+		Error   string
+	}
+
+	type test struct {
+		Release  *changelog.Release
+		Date     string
+		Expected expected
+	}
+
+	suite := map[string]test{
+		"Valid": {
+			Release: new(changelog.Release),
+			Date:    "2020-05-30",
+			Expected: expected{
+				Release: &changelog.Release{
+					Date: parseDate("2020-05-30"),
+				},
+				Error: "",
+			},
+		},
+		"Invalid": {
+			Release: new(changelog.Release),
+			Date:    "202020-0505-3030",
+			Expected: expected{
+				Release: nil,
+				Error:   fmt.Sprintf("invalid date 202020-0505-3030, expected to match regex %v", changelog.DateRegex),
+			},
+		},
+	}
+
+	var counter int
+	for name, test := range suite {
+		counter++
+		t.Logf("Test Case %v/%v - %s", counter, len(suite), name)
+
+		err := test.Release.SetDate(test.Date)
+		if test.Expected.Error != "" {
+			a.EqualError(err, test.Expected.Error)
+		} else {
+			a.Equal(nil, err)
+		}
+	}
+}
+
+func TestSetVersion(t *testing.T) {
+	a := assert.New(t)
+
+	type expected struct {
+		Release *changelog.Release
+		Error   string
+	}
+
+	type test struct {
+		Release  *changelog.Release
+		Version  string
+		Expected expected
+	}
+
+	suite := map[string]test{
+		"Valid": {
+			Release: new(changelog.Release),
+			Version: "1.0.0",
+			Expected: expected{
+				Release: &changelog.Release{
+					Version: stringP("1.0.0"),
+				},
+				Error: "",
+			},
+		},
+		"Invalid": {
+			Release: new(changelog.Release),
+			Version: "1.0",
+			Expected: expected{
+				Release: nil,
+				Error:   fmt.Sprintf("invalid semantic version 1.0, expected to match regex %v", changelog.SemVerRegex),
+			},
+		},
+	}
+
+	var counter int
+	for name, test := range suite {
+		counter++
+		t.Logf("Test Case %v/%v - %s", counter, len(suite), name)
+
+		err := test.Release.SetVersion(test.Version)
+		if test.Expected.Error != "" {
+			a.EqualError(err, test.Expected.Error)
+		} else {
+			a.Equal(nil, err)
+		}
+	}
+}
+
+func TestSetURL(t *testing.T) {
+	a := assert.New(t)
+
+	type expected struct {
+		Release *changelog.Release
+		Error   string
+	}
+
+	type test struct {
+		Release  *changelog.Release
+		URL      string
+		Expected expected
+	}
+
+	suite := map[string]test{
+		"Valid": {
+			Release: new(changelog.Release),
+			URL:     "https://github.com/anton-yurchenko/go-changelog",
+			Expected: expected{
+				Release: &changelog.Release{
+					URL: stringP("https://github.com/anton-yurchenko/go-changelog"),
+				},
+				Error: "",
+			},
+		},
+		"Invalid": {
+			Release: new(changelog.Release),
+			URL:     "github.com/sdf\as",
+			Expected: expected{
+				Release: nil,
+				Error:   "parse \"github.com/sdf\\as\": net/url: invalid control character in URL",
+			},
+		},
+	}
+
+	var counter int
+	for name, test := range suite {
+		counter++
+		t.Logf("Test Case %v/%v - %s", counter, len(suite), name)
+
+		err := test.Release.SetURL(test.URL)
+		if test.Expected.Error != "" {
+			a.EqualError(err, test.Expected.Error)
+		} else {
+			a.Equal(nil, err)
+		}
+	}
+}
+
+func TestReleaseAddNotice(t *testing.T) {
+	a := assert.New(t)
+
+	t.Log("Test Case 1/1 - Update Notice")
+
+	target := &changelog.Release{
+		Changes: &changelog.Changes{
+			Notice: stringP("notice"),
+		},
+	}
+
+	expected := &changelog.Release{
+		Changes: &changelog.Changes{
+			Notice: stringP(""),
+		},
+	}
+
+	target.AddNotice("")
+
+	a.Equal(expected, target)
+}
+
+func TestReleaseAddChange(t *testing.T) {
+	a := assert.New(t)
+
+	t.Log("Test Case 1/1 - Add Change")
+
+	target := &changelog.Release{
+		Changes: &changelog.Changes{},
+	}
+
+	expected := &changelog.Release{
+		Changes: &changelog.Changes{
+			Added: sliceOfStringsP([]string{"change"}),
+		},
+	}
+
+	err := target.AddChange("added", "change")
+
+	a.Equal(expected, target)
+	a.Equal(nil, err)
 }

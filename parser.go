@@ -40,7 +40,8 @@ func NewParser(filepath string) (*Parser, error) {
 }
 
 // NewParser creates a new Changelog Parser using non default (OS) filesystem.
-// Possible options for `filesystems` are: [`afero.NewOsFs()`,`afero.NewMemMapFs()`]
+//
+// Possible options for Filesystem are: [afero.NewOsFs(), afero.NewMemMapFs()].
 func NewParserWithFilesystem(filesystem Filesystem, filepath string) (*Parser, error) {
 	_, err := filesystem.Stat(filepath)
 	if os.IsNotExist(err) {
@@ -52,7 +53,7 @@ func NewParserWithFilesystem(filesystem Filesystem, filepath string) (*Parser, e
 		Filesystem: filesystem}, nil
 }
 
-// Parse a changelog file and return a Changelog struct
+// Parse a changelog file and return a Changelog struct.
 func (p *Parser) Parse() (*Changelog, error) {
 	o := new(Changelog)
 

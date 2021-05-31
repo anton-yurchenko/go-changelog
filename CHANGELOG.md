@@ -5,7 +5,8 @@
 - Output to string methods on changelog struct and its components
 - Support YANKED releases
 - Save changelog to file method
-- New changelog and its components methods
+- Create new changelog
+- Add/Change changelog components like releases/title/unreleased/...
 
 ## [0.0.2] - 2021-05-22
 ### Added

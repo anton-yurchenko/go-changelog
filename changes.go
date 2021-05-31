@@ -18,7 +18,7 @@ type Changes struct {
 	Security   *[]string
 }
 
-// ToString returns a Markdown formatted Changes struct
+// ToString returns a Markdown formatted Changes struct.
 func (c *Changes) ToString() string {
 	var o []string
 	if c.Notice != nil {
@@ -61,10 +61,14 @@ func scopeToString(scope *[]string) string {
 	return strings.Join(o, "\n")
 }
 
+// AddNotice adds a notice to the changes.
 func (c *Changes) AddNotice(notice string) {
 	*c.Notice = notice
 }
 
+// AddChange adds a scoped change.
+//
+// Supported scopes: [added, changed, deprecated, removed, fixed, security].
 func (c *Changes) AddChange(scope string, change string) error {
 	changesList := []string{change}
 

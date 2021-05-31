@@ -433,7 +433,7 @@ func TestAddUnreleasedChange(t *testing.T) {
 	}
 }
 
-func TestGetRelease(t *testing.T) {
+func TestChangelogGetRelease(t *testing.T) {
 	a := assert.New(t)
 
 	type test struct {
@@ -443,10 +443,6 @@ func TestGetRelease(t *testing.T) {
 	}
 
 	suite := map[string]test{
-		"Not Found": {
-			Changelog: changelog.NewChangelog(),
-			Version:   "1.0.0",
-		},
 		"Found": {
 			Changelog: &changelog.Changelog{
 				Releases: changelog.Releases{
@@ -475,5 +471,300 @@ func TestGetRelease(t *testing.T) {
 
 		r := test.Changelog.GetRelease(test.Version)
 		a.Equal(test.Release, r)
+	}
+}
+
+func TestChangelogCreateRelease(t *testing.T) {
+	a := assert.New(t)
+
+	type expected struct {
+		Release *changelog.Release
+		Error   string
+	}
+
+	type test struct {
+		Changelog *changelog.Changelog
+		Version   string
+		Date      string
+		Expected  expected
+	}
+
+	suite := map[string]test{
+		"Success": {
+			Changelog: &changelog.Changelog{
+				Releases: changelog.Releases{
+					{
+						Version: stringP("0.0.1"),
+					},
+				},
+			},
+			Version: "1.0.0",
+			Date:    "2021-05-30",
+			Expected: expected{
+				Release: &changelog.Release{
+					Version: stringP("1.0.0"),
+					Date:    parseDate("2021-05-30"),
+					Changes: new(changelog.Changes),
+				},
+				Error: "",
+			},
+		},
+	}
+
+	var counter int
+	for name, test := range suite {
+		counter++
+		t.Logf("Test Case %v/%v - %s", counter, len(suite), name)
+
+		r, err := test.Changelog.CreateRelease(test.Version, test.Date)
+		if test.Expected.Error != "" {
+			a.EqualError(err, test.Expected.Error)
+		} else {
+			a.Equal(test.Expected.Release, r)
+		}
+	}
+}
+
+func TestChangelogCreateReleaseWithURL(t *testing.T) {
+	a := assert.New(t)
+
+	type expected struct {
+		Release *changelog.Release
+		Error   string
+	}
+
+	type test struct {
+		Changelog *changelog.Changelog
+		Version   string
+		Date      string
+		URL       string
+		Expected  expected
+	}
+
+	suite := map[string]test{
+		"Success": {
+			Changelog: &changelog.Changelog{
+				Releases: changelog.Releases{
+					{
+						Version: stringP("0.0.1"),
+					},
+				},
+			},
+			Version: "1.0.0",
+			Date:    "2021-05-30",
+			URL:     "https://github.com/anton-yurchenko/go-changelog",
+			Expected: expected{
+				Release: &changelog.Release{
+					Version: stringP("1.0.0"),
+					Date:    parseDate("2021-05-30"),
+					URL:     stringP("https://github.com/anton-yurchenko/go-changelog"),
+					Changes: new(changelog.Changes),
+				},
+				Error: "",
+			},
+		},
+	}
+
+	var counter int
+	for name, test := range suite {
+		counter++
+		t.Logf("Test Case %v/%v - %s", counter, len(suite), name)
+
+		r, err := test.Changelog.CreateReleaseWithURL(test.Version, test.Date, test.URL)
+		if test.Expected.Error != "" {
+			a.EqualError(err, test.Expected.Error)
+		} else {
+			a.Equal(test.Expected.Release, r)
+		}
+	}
+}
+
+func TestCreateReleaseFromUnreleased(t *testing.T) {
+	a := assert.New(t)
+
+	type expected struct {
+		Release *changelog.Release
+		Error   string
+	}
+
+	type test struct {
+		Changelog *changelog.Changelog
+		Version   string
+		Date      string
+		Expected  expected
+	}
+
+	suite := map[string]test{
+		"Success": {
+			Changelog: &changelog.Changelog{
+				Releases: changelog.Releases{
+					{
+						Version: stringP("0.0.1"),
+					},
+				},
+				Unreleased: &changelog.Release{
+					Changes: &changelog.Changes{
+						Added:   sliceOfStringsP([]string{"feature"}),
+						Changed: sliceOfStringsP([]string{"behavior"}),
+					},
+				},
+			},
+			Version: "1.0.0",
+			Date:    "2021-05-30",
+			Expected: expected{
+				Release: &changelog.Release{
+					Version: stringP("1.0.0"),
+					Date:    parseDate("2021-05-30"),
+					Changes: &changelog.Changes{
+						Added:   sliceOfStringsP([]string{"feature"}),
+						Changed: sliceOfStringsP([]string{"behavior"}),
+					},
+				},
+				Error: "",
+			},
+		},
+		"Failure": {
+			Changelog: &changelog.Changelog{
+				Releases: changelog.Releases{
+					{
+						Version: stringP("1.0.0"),
+					},
+				},
+				Unreleased: &changelog.Release{
+					Changes: &changelog.Changes{
+						Added:   sliceOfStringsP([]string{"feature"}),
+						Changed: sliceOfStringsP([]string{"behavior"}),
+					},
+				},
+			},
+			Version: "1.0.0",
+			Date:    "2021-05-30",
+			Expected: expected{
+				Release: nil,
+				Error:   "version 1.0.0 already exists",
+			},
+		},
+	}
+
+	var counter int
+	for name, test := range suite {
+		counter++
+		t.Logf("Test Case %v/%v - %s", counter, len(suite), name)
+
+		r, err := test.Changelog.CreateReleaseFromUnreleased(test.Version, test.Date)
+		if test.Expected.Error != "" {
+			a.EqualError(err, test.Expected.Error)
+		} else {
+			a.Equal(test.Expected.Release, r)
+			a.Equal(new(changelog.Release), test.Changelog.Unreleased)
+		}
+	}
+}
+
+func TestCreateReleaseFromUnreleasedWithURL(t *testing.T) {
+	a := assert.New(t)
+
+	type expected struct {
+		Release *changelog.Release
+		Error   string
+	}
+
+	type test struct {
+		Changelog *changelog.Changelog
+		Version   string
+		Date      string
+		URL       string
+		Expected  expected
+	}
+
+	suite := map[string]test{
+		"Success": {
+			Changelog: &changelog.Changelog{
+				Releases: changelog.Releases{
+					{
+						Version: stringP("0.0.1"),
+					},
+				},
+				Unreleased: &changelog.Release{
+					Changes: &changelog.Changes{
+						Added:   sliceOfStringsP([]string{"feature"}),
+						Changed: sliceOfStringsP([]string{"behavior"}),
+					},
+				},
+			},
+			Version: "1.0.0",
+			Date:    "2021-05-30",
+			URL:     "https://github.com/anton-yurchenko/go-changelog",
+			Expected: expected{
+				Release: &changelog.Release{
+					Version: stringP("1.0.0"),
+					Date:    parseDate("2021-05-30"),
+					URL:     stringP("https://github.com/anton-yurchenko/go-changelog"),
+					Changes: &changelog.Changes{
+						Added:   sliceOfStringsP([]string{"feature"}),
+						Changed: sliceOfStringsP([]string{"behavior"}),
+					},
+				},
+				Error: "",
+			},
+		},
+		"Failure": {
+			Changelog: &changelog.Changelog{
+				Releases: changelog.Releases{
+					{
+						Version: stringP("1.0.0"),
+					},
+				},
+				Unreleased: &changelog.Release{
+					Changes: &changelog.Changes{
+						Added:   sliceOfStringsP([]string{"feature"}),
+						Changed: sliceOfStringsP([]string{"behavior"}),
+					},
+				},
+			},
+			Version: "1.0.0",
+			Date:    "2021-05-30",
+			URL:     "https://github.com/anton-yurchenko/go-changelog",
+			Expected: expected{
+				Release: nil,
+				Error:   "version 1.0.0 already exists",
+			},
+		},
+		"Invalid URL": {
+			Changelog: &changelog.Changelog{
+				Releases: changelog.Releases{
+					{
+						Version: stringP("0.1.0"),
+					},
+				},
+				Unreleased: &changelog.Release{
+					Changes: &changelog.Changes{
+						Added:   sliceOfStringsP([]string{"feature"}),
+						Changed: sliceOfStringsP([]string{"behavior"}),
+					},
+				},
+			},
+			Version: "1.0.0",
+			Date:    "2021-05-30",
+			URL:     "github.com/sdf\as",
+			Expected: expected{
+				Release: nil,
+				Error:   "parse \"github.com/sdf\\as\": net/url: invalid control character in URL",
+			},
+		},
+	}
+
+	var counter int
+	for name, test := range suite {
+		counter++
+		t.Logf("Test Case %v/%v - %s", counter, len(suite), name)
+
+		r, err := test.Changelog.CreateReleaseFromUnreleasedWithURL(test.Version, test.Date, test.URL)
+		if test.Expected.Error != "" {
+			a.EqualError(err, test.Expected.Error)
+		} else {
+			a.Equal(test.Expected.Release, r)
+			a.Equal(new(changelog.Release), test.Changelog.Unreleased)
+		}
 	}
 }
