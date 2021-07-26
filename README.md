@@ -12,7 +12,7 @@ Golang package for changelog file creation/parsing
 
 - Supports [Semantic Version](https://semver.org/)
 - [Keep a Changelog](https://keepachangelog.com/) Compliant
-- [Common Changelog](https://github.com/vweevers/common-changelog) Compliant
+- [Common Changelog](https://common-changelog.org/) Compliant
 
 ## Manual
 
