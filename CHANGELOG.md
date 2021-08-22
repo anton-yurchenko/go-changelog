@@ -1,6 +1,10 @@
 # Changelog
 
-## [1.0.1] - 2021-08-22
+## [1.0.2] - 2021-08-22
+### Fixed
+- Wrong package name caching by importers
+
+## [1.0.1] - 2021-08-22 [YANKED]
 ### Changed
 - Update to GoLang 1.17
 - Update depenedencies
@@ -27,6 +31,7 @@
 
 _Initial release_
 
+[1.0.2]: https://github.com/anton-yurchenko/go-changelog/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/anton-yurchenko/go-changelog/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/anton-yurchenko/go-changelog/compare/v0.0.2...v1.0.0
 [0.0.2]: https://github.com/anton-yurchenko/go-changelog/compare/v0.0.1...v0.0.2
