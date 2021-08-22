@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.0.1] - 2021-08-22
+### Changed
+- Update to GoLang 1.17
+- Update depenedencies
+
 ## [1.0.0] - 2021-05-31
 ### Added
 - Output to string methods on changelog struct and its components
@@ -22,6 +27,7 @@
 
 _Initial release_
 
+[1.0.1]: https://github.com/anton-yurchenko/go-changelog/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/anton-yurchenko/go-changelog/compare/v0.0.2...v1.0.0
 [0.0.2]: https://github.com/anton-yurchenko/go-changelog/compare/v0.0.1...v0.0.2
 [0.0.1]: https://github.com/anton-yurchenko/go-changelog/releases/tag/v0.0.1
