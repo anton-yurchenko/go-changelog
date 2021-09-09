@@ -111,7 +111,7 @@ func TestChangesToString(t *testing.T) {
 			},
 			Expected: `notice
 
-### Added
+### Security
 - A
 - B
 
@@ -119,7 +119,7 @@ func TestChangesToString(t *testing.T) {
 - A
 - B
 
-### Deprecated
+### Added
 - A
 - B
 
@@ -131,7 +131,7 @@ func TestChangesToString(t *testing.T) {
 - A
 - B
 
-### Security
+### Deprecated
 - A
 - B
 `,
@@ -150,6 +150,10 @@ func TestChangesToString(t *testing.T) {
 			},
 			Expected: `notice
 
+### Changed
+- A
+- B
+
 ### Added
 - A:
 ` + "```yaml" + `
@@ -157,10 +161,6 @@ this:
   that:
     - x` + "```" + `
 
-- B
-
-### Changed
-- A
 - B
 `,
 		},

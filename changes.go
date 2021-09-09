@@ -9,12 +9,12 @@ import (
 
 // Changes are scoped changelog entries for a single version.
 type Changes struct {
-	Notice     *string
 	Added      *[]string
 	Changed    *[]string
 	Deprecated *[]string
-	Removed    *[]string
 	Fixed      *[]string
+	Notice     *string
+	Removed    *[]string
 	Security   *[]string
 }
 
@@ -25,16 +25,16 @@ func (c *Changes) ToString() string {
 		o = append(o, fmt.Sprintf("%v\n", *c.Notice))
 	}
 
-	if c.Added != nil {
-		o = append(o, "### Added", fmt.Sprintf("%v\n", scopeToString(c.Added)))
+	if c.Security != nil {
+		o = append(o, "### Security", fmt.Sprintf("%v\n", scopeToString(c.Security)))
 	}
 
 	if c.Changed != nil {
 		o = append(o, "### Changed", fmt.Sprintf("%v\n", scopeToString(c.Changed)))
 	}
 
-	if c.Deprecated != nil {
-		o = append(o, "### Deprecated", fmt.Sprintf("%v\n", scopeToString(c.Deprecated)))
+	if c.Added != nil {
+		o = append(o, "### Added", fmt.Sprintf("%v\n", scopeToString(c.Added)))
 	}
 
 	if c.Removed != nil {
@@ -45,8 +45,8 @@ func (c *Changes) ToString() string {
 		o = append(o, "### Fixed", fmt.Sprintf("%v\n", scopeToString(c.Fixed)))
 	}
 
-	if c.Security != nil {
-		o = append(o, "### Security", fmt.Sprintf("%v\n", scopeToString(c.Security)))
+	if c.Deprecated != nil {
+		o = append(o, "### Deprecated", fmt.Sprintf("%v\n", scopeToString(c.Deprecated)))
 	}
 
 	return strings.Join(o, "\n")

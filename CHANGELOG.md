@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.0.3] - 2021-09-09
+### Changed
+- Changelog scopes are sorted by priority (from a point of view of a developer)
+
 ## [1.0.2] - 2021-08-22
 ### Fixed
 - Wrong package name caching by importers
@@ -31,6 +35,7 @@
 
 _Initial release_
 
+[1.0.3]: https://github.com/anton-yurchenko/go-changelog/compare/v1.0.2...v1.0.3
 [1.0.2]: https://github.com/anton-yurchenko/go-changelog/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/anton-yurchenko/go-changelog/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/anton-yurchenko/go-changelog/compare/v0.0.2...v1.0.0
