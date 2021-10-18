@@ -434,25 +434,27 @@ func (p *Parser) parseChanges(startingLine, endLine int) *Changes {
 			}
 			entries := p.parseScopeEntries(*start, end)
 
-			switch name {
-			case "Added":
-				notEmpty = true
-				changes.Added = entries
-			case "Changed":
-				notEmpty = true
-				changes.Changed = entries
-			case "Deprecated":
-				notEmpty = true
-				changes.Deprecated = entries
-			case "Removed":
-				notEmpty = true
-				changes.Removed = entries
-			case "Fixed":
-				notEmpty = true
-				changes.Fixed = entries
-			case "Security":
-				notEmpty = true
-				changes.Security = entries
+			if len(*entries) > 0 {
+				switch name {
+				case "Added":
+					notEmpty = true
+					changes.Added = entries
+				case "Changed":
+					notEmpty = true
+					changes.Changed = entries
+				case "Deprecated":
+					notEmpty = true
+					changes.Deprecated = entries
+				case "Removed":
+					notEmpty = true
+					changes.Removed = entries
+				case "Fixed":
+					notEmpty = true
+					changes.Fixed = entries
+				case "Security":
+					notEmpty = true
+					changes.Security = entries
+				}
 			}
 		}
 	}

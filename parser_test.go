@@ -921,6 +921,38 @@ Notice
 				Error: "",
 			},
 		},
+		"Changelog - Empty Scopes": {
+			Changelog: `Notice
+
+## [0.0.1] - 2021-05-19
+### Changed
+
+### Fixed
+### Added
+- Change 1
+- Change 2
+
+[0.0.1]: https://github.com/anton-yurchenko/go-changelog/releases/tag/v0.0.1`,
+			Expected: expected{
+				Result: &changelog.Changelog{
+					Description: stringP("Notice"),
+					Releases: []*changelog.Release{
+						{
+							Version: stringP("0.0.1"),
+							URL:     stringP("https://github.com/anton-yurchenko/go-changelog/releases/tag/v0.0.1"),
+							Date:    dateP("2021-05-19"),
+							Changes: &changelog.Changes{
+								Added: sliceOfStringsP([]string{
+									"Change 1",
+									"Change 2",
+								}),
+							},
+						},
+					},
+				},
+				Error: "",
+			},
+		},
 	}
 
 	var counter int
@@ -928,6 +960,9 @@ Notice
 		counter++
 		t.Logf("Test Case %v/%v - %s", counter, len(suite), name)
 
+		if name == "Changelog - Empty Scopes" {
+			t.Log("got it!")
+		}
 		// prepare test case
 		var p *changelog.Parser
 		if name == "Filesystem Error" {
