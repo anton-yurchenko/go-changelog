@@ -120,6 +120,7 @@ func main() {
 ## Notes
 
 - Releases are sorted by their [Semantic Version](https://semver.org/)
+- Scopes are sorted by their importance
 
 ## License
 
