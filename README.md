@@ -18,7 +18,6 @@ Golang package for changelog file creation/parsing
 
 - Install with `go get -u github.com/anton-yurchenko/go-changelog`
 
-
 ### Examples
 
 #### Create a changelog file
