@@ -260,10 +260,8 @@ func TestSaveToFile(t *testing.T) {
 		}
 
 		err := test.Changelog.SaveToFile(m, "CHANGELOG.md")
-		if test.Expected != "" {
+		if test.Expected != "" || err != nil {
 			a.EqualError(err, fmt.Sprintf("error creating a file: %v", test.Expected))
-		} else {
-			a.Equal(nil, err)
 		}
 	}
 }
@@ -352,10 +350,10 @@ func TestSetUnreleasedURL(t *testing.T) {
 		counter++
 		t.Logf("Test Case %v/%v - %s", counter, len(suite), name)
 
-		if test.Expected != "" {
-			a.EqualError(test.Changelog.SetUnreleasedURL(test.URL), test.Expected)
-		} else {
-			a.Equal(nil, test.Changelog.SetUnreleasedURL(test.URL))
+		err := test.Changelog.SetUnreleasedURL(test.URL)
+
+		if test.Expected != "" || err != nil {
+			a.EqualError(err, test.Expected)
 		}
 	}
 }
@@ -438,7 +436,7 @@ func TestAddUnreleasedChange(t *testing.T) {
 
 		err := test.Changelog.AddUnreleasedChange(test.Scope, test.Change)
 
-		if test.Expected.Error != "" {
+		if test.Expected.Error != "" || err != nil {
 			a.EqualError(err, test.Expected.Error)
 		} else {
 			a.Equal(test.Expected.Changelog, test.Changelog)
@@ -530,7 +528,7 @@ func TestChangelogCreateRelease(t *testing.T) {
 		t.Logf("Test Case %v/%v - %s", counter, len(suite), name)
 
 		r, err := test.Changelog.CreateRelease(test.Version, test.Date)
-		if test.Expected.Error != "" {
+		if test.Expected.Error != "" || err != nil {
 			a.EqualError(err, test.Expected.Error)
 		} else {
 			a.Equal(test.Expected.Release, r)
@@ -584,7 +582,7 @@ func TestChangelogCreateReleaseWithURL(t *testing.T) {
 		t.Logf("Test Case %v/%v - %s", counter, len(suite), name)
 
 		r, err := test.Changelog.CreateReleaseWithURL(test.Version, test.Date, test.URL)
-		if test.Expected.Error != "" {
+		if test.Expected.Error != "" || err != nil {
 			a.EqualError(err, test.Expected.Error)
 		} else {
 			a.Equal(test.Expected.Release, r)
@@ -681,7 +679,7 @@ func TestCreateReleaseFromUnreleased(t *testing.T) {
 		t.Logf("Test Case %v/%v - %s", counter, len(suite), name)
 
 		r, err := test.Changelog.CreateReleaseFromUnreleased(test.Version, test.Date)
-		if test.Expected.Error != "" {
+		if test.Expected.Error != "" || err != nil {
 			a.EqualError(err, test.Expected.Error)
 		} else {
 			a.Equal(test.Expected.Release, r)
@@ -789,7 +787,7 @@ func TestCreateReleaseFromUnreleasedWithURL(t *testing.T) {
 		t.Logf("Test Case %v/%v - %s", counter, len(suite), name)
 
 		r, err := test.Changelog.CreateReleaseFromUnreleasedWithURL(test.Version, test.Date, test.URL)
-		if test.Expected.Error != "" {
+		if test.Expected.Error != "" || err != nil {
 			a.EqualError(err, test.Expected.Error)
 		} else {
 			a.Equal(test.Expected.Release, r)

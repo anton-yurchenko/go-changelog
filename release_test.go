@@ -143,10 +143,8 @@ func TestSetDate(t *testing.T) {
 		t.Logf("Test Case %v/%v - %s", counter, len(suite), name)
 
 		err := test.Release.SetDate(test.Date)
-		if test.Expected.Error != "" {
+		if test.Expected.Error != "" || err != nil {
 			a.EqualError(err, test.Expected.Error)
-		} else {
-			a.Equal(nil, err)
 		}
 	}
 }
@@ -192,10 +190,8 @@ func TestSetVersion(t *testing.T) {
 		t.Logf("Test Case %v/%v - %s", counter, len(suite), name)
 
 		err := test.Release.SetVersion(test.Version)
-		if test.Expected.Error != "" {
+		if test.Expected.Error != "" || err != nil {
 			a.EqualError(err, test.Expected.Error)
-		} else {
-			a.Equal(nil, err)
 		}
 	}
 }
@@ -241,10 +237,8 @@ func TestSetURL(t *testing.T) {
 		t.Logf("Test Case %v/%v - %s", counter, len(suite), name)
 
 		err := test.Release.SetURL(test.URL)
-		if test.Expected.Error != "" {
+		if test.Expected.Error != "" || err != nil {
 			a.EqualError(err, test.Expected.Error)
-		} else {
-			a.Equal(nil, err)
 		}
 	}
 }

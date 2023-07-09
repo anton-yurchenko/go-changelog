@@ -469,7 +469,7 @@ func TestAddChange(t *testing.T) {
 
 		err := test.Changes.AddChange(test.Scope, test.Change)
 		a.Equal(test.Expected.Changes, test.Changes)
-		if test.Expected.Error != "" {
+		if test.Expected.Error != "" || err != nil {
 			a.EqualError(err, test.Expected.Error)
 		}
 	}

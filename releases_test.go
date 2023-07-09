@@ -242,7 +242,7 @@ func TestReleasesCreateRelease(t *testing.T) {
 		t.Logf("Test Case %v/%v - %s", counter, len(suite), name)
 
 		r, err := test.Releases.CreateRelease(test.Version, test.Date)
-		if test.Expected.Error != "" {
+		if test.Expected.Error != "" || err != nil {
 			a.EqualError(err, test.Expected.Error)
 		} else {
 			a.Equal(test.Expected.Release, r)
@@ -322,7 +322,7 @@ func TestReleasesCreateReleaseWithURL(t *testing.T) {
 		t.Logf("Test Case %v/%v - %s", counter, len(suite), name)
 
 		r, err := test.Releases.CreateReleaseWithURL(test.Version, test.Date, test.URL)
-		if test.Expected.Error != "" {
+		if test.Expected.Error != "" || err != nil {
 			a.EqualError(err, test.Expected.Error)
 		} else {
 			a.Equal(test.Expected.Release, r)
