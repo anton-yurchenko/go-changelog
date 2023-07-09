@@ -27,6 +27,7 @@ package main
 
 import (
     changelog "github.com/anton-yurchenko/go-changelog"
+    "github.com/spf13/afero"
 )
 
 func main() {
@@ -37,7 +38,7 @@ func main() {
     c.AddUnreleasedChange("fixed", []string{"Bug"})
     c.AddUnreleasedChange("added", []string{"Feature"})
 
-    r, err := c.CreateReleaseFromUnreleased("1.0.0", "https://github.com/anton-yurchenko/go-changelog/releases/tag/v1.0.0", "2021-05-31")
+    r, err := c.CreateReleaseFromUnreleasedWithURL("1.0.0", "2021-05-31","https://github.com/anton-yurchenko/go-changelog/releases/tag/v1.0.0")
     if err != nil {
         panic(err)
     }
@@ -47,7 +48,7 @@ func main() {
     }
     r.AddNotice("**This release contains breaking changes**")
 
-    if err := c.SaveToFile("./CHANGELOG.md"); err != nil {
+    if err := c.SaveToFile(afero.NewOsFs(), "./CHANGELOG.md"); err != nil {
         panic(err)
     }
 }
@@ -87,6 +88,7 @@ package main
 
 import (
     changelog "github.com/anton-yurchenko/go-changelog"
+    "github.com/spf13/afero"
 )
 
 func main() {
@@ -107,7 +109,7 @@ func main() {
 
     r.Yanked = true
 
-    c.SaveToFile("./CHANGELOG.md")
+    c.SaveToFile(afero.NewOsFs(), "./CHANGELOG.md")
     if err != nil {
         panic(err)
     }
@@ -120,6 +122,7 @@ func main() {
 
 - Releases are sorted by their [Semantic Version](https://semver.org/)
 - Scopes are sorted by their importance
+- `SaveToFile` will overwrite the existing file, and anything that does not match the changelog format will be omitted
 
 ## License
 

@@ -1,6 +1,20 @@
 # Changelog
 
-## [1.0.5] - 2023-07-18
+## [1.1.0] - 2023-07-09
+
+### Added
+
+- Titles line breakers
+
+### Changed
+
+- Update dependencies
+
+### Fixed
+
+- Null pointer exception upon `CreateReleaseFromUnreleased` / `CreateReleaseFromUnreleasedWithURL` call with an empty `Unreleased` section
+
+## [1.0.5] - 2023-06-18
 
 ### Changed
 
@@ -60,6 +74,7 @@
 
 _Initial release_
 
+[1.1.0]: https://github.com/anton-yurchenko/go-changelog/compare/v1.0.5...v1.1.0
 [1.0.5]: https://github.com/anton-yurchenko/go-changelog/compare/v1.0.4...v1.0.5
 [1.0.4]: https://github.com/anton-yurchenko/go-changelog/compare/v1.0.3...v1.0.4
 [1.0.3]: https://github.com/anton-yurchenko/go-changelog/compare/v1.0.2...v1.0.3
