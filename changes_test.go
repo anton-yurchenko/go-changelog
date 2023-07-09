@@ -34,7 +34,7 @@ func TestChangesToString(t *testing.T) {
 					"B",
 				}),
 			},
-			Expected: "### Added\n- A\n- B\n",
+			Expected: "### Added\n\n- A\n- B\n",
 		},
 		"Changed": {
 			Changelog: &changelog.Changes{
@@ -43,7 +43,7 @@ func TestChangesToString(t *testing.T) {
 					"B",
 				}),
 			},
-			Expected: "### Changed\n- A\n- B\n",
+			Expected: "### Changed\n\n- A\n- B\n",
 		},
 		"Deprecated": {
 			Changelog: &changelog.Changes{
@@ -52,7 +52,7 @@ func TestChangesToString(t *testing.T) {
 					"B",
 				}),
 			},
-			Expected: "### Deprecated\n- A\n- B\n",
+			Expected: "### Deprecated\n\n- A\n- B\n",
 		},
 		"Removed": {
 			Changelog: &changelog.Changes{
@@ -61,7 +61,7 @@ func TestChangesToString(t *testing.T) {
 					"B",
 				}),
 			},
-			Expected: "### Removed\n- A\n- B\n",
+			Expected: "### Removed\n\n- A\n- B\n",
 		},
 		"Fixed": {
 			Changelog: &changelog.Changes{
@@ -70,7 +70,7 @@ func TestChangesToString(t *testing.T) {
 					"B",
 				}),
 			},
-			Expected: "### Fixed\n- A\n- B\n",
+			Expected: "### Fixed\n\n- A\n- B\n",
 		},
 		"Security": {
 			Changelog: &changelog.Changes{
@@ -79,7 +79,7 @@ func TestChangesToString(t *testing.T) {
 					"B",
 				}),
 			},
-			Expected: "### Security\n- A\n- B\n",
+			Expected: "### Security\n\n- A\n- B\n",
 		},
 		"Full": {
 			Changelog: &changelog.Changes{
@@ -112,26 +112,32 @@ func TestChangesToString(t *testing.T) {
 			Expected: `notice
 
 ### Security
+
 - A
 - B
 
 ### Changed
+
 - A
 - B
 
 ### Added
+
 - A
 - B
 
 ### Removed
+
 - A
 - B
 
 ### Fixed
+
 - A
 - B
 
 ### Deprecated
+
 - A
 - B
 `,
@@ -151,10 +157,12 @@ func TestChangesToString(t *testing.T) {
 			Expected: `notice
 
 ### Changed
+
 - A
 - B
 
 ### Added
+
 - A:
 ` + "```yaml" + `
 this:

@@ -26,27 +26,27 @@ func (c *Changes) ToString() string {
 	}
 
 	if c.Security != nil {
-		o = append(o, "### Security", fmt.Sprintf("%v\n", scopeToString(c.Security)))
+		o = append(o, "### Security\n", fmt.Sprintf("%v\n", scopeToString(c.Security)))
 	}
 
 	if c.Changed != nil {
-		o = append(o, "### Changed", fmt.Sprintf("%v\n", scopeToString(c.Changed)))
+		o = append(o, "### Changed\n", fmt.Sprintf("%v\n", scopeToString(c.Changed)))
 	}
 
 	if c.Added != nil {
-		o = append(o, "### Added", fmt.Sprintf("%v\n", scopeToString(c.Added)))
+		o = append(o, "### Added\n", fmt.Sprintf("%v\n", scopeToString(c.Added)))
 	}
 
 	if c.Removed != nil {
-		o = append(o, "### Removed", fmt.Sprintf("%v\n", scopeToString(c.Removed)))
+		o = append(o, "### Removed\n", fmt.Sprintf("%v\n", scopeToString(c.Removed)))
 	}
 
 	if c.Fixed != nil {
-		o = append(o, "### Fixed", fmt.Sprintf("%v\n", scopeToString(c.Fixed)))
+		o = append(o, "### Fixed\n", fmt.Sprintf("%v\n", scopeToString(c.Fixed)))
 	}
 
 	if c.Deprecated != nil {
-		o = append(o, "### Deprecated", fmt.Sprintf("%v\n", scopeToString(c.Deprecated)))
+		o = append(o, "### Deprecated\n", fmt.Sprintf("%v\n", scopeToString(c.Deprecated)))
 	}
 
 	return strings.Join(o, "\n")

@@ -26,12 +26,12 @@ func (r *Release) ToString() (string, string) {
 
 	if r.Version != nil {
 		if r.Date != nil {
-			o = append(o, fmt.Sprintf("## [%v] - %v", *r.Version, formatDate(r.Date)))
+			o = append(o, fmt.Sprintf("## [%v] - %v\n", *r.Version, formatDate(r.Date)))
 		} else {
-			o = append(o, fmt.Sprintf("## [%v]", *r.Version))
+			o = append(o, fmt.Sprintf("## [%v]\n", *r.Version))
 		}
 	} else {
-		o = append(o, "## [Unreleased]")
+		o = append(o, "## [Unreleased]\n")
 	}
 
 	if r.Changes != nil {

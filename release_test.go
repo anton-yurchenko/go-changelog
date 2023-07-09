@@ -24,14 +24,14 @@ func TestReleaseToString(t *testing.T) {
 	suite := map[string]test{
 		"Unreleased": {
 			Release:            new(changelog.Release),
-			ExpectedString:     "## [Unreleased]",
+			ExpectedString:     "## [Unreleased]\n",
 			ExpectedDefinition: "",
 		},
 		"Unreleased With URL": {
 			Release: &changelog.Release{
 				URL: stringP("https://github.com/anton-yurchenko/go-changelog/compare/v0.0.1...HEAD"),
 			},
-			ExpectedString:     "## [Unreleased]",
+			ExpectedString:     "## [Unreleased]\n",
 			ExpectedDefinition: "[Unreleased]: https://github.com/anton-yurchenko/go-changelog/compare/v0.0.1...HEAD",
 		},
 		"Release": {
@@ -40,7 +40,7 @@ func TestReleaseToString(t *testing.T) {
 				URL:     stringP("https://github.com/anton-yurchenko/go-changelog/releases/tag/v0.0.1"),
 				Date:    &tm1,
 			},
-			ExpectedString:     "## [0.0.1] - 2021-05-19",
+			ExpectedString:     "## [0.0.1] - 2021-05-19\n",
 			ExpectedDefinition: "[0.0.1]: https://github.com/anton-yurchenko/go-changelog/releases/tag/v0.0.1",
 		},
 		"Without Date": {
@@ -48,7 +48,7 @@ func TestReleaseToString(t *testing.T) {
 				Version: stringP("0.0.1"),
 				URL:     stringP("https://github.com/anton-yurchenko/go-changelog/releases/tag/v0.0.1"),
 			},
-			ExpectedString:     "## [0.0.1]",
+			ExpectedString:     "## [0.0.1]\n",
 			ExpectedDefinition: "[0.0.1]: https://github.com/anton-yurchenko/go-changelog/releases/tag/v0.0.1",
 		},
 		"Complex Release with Changes": {
@@ -69,13 +69,16 @@ func TestReleaseToString(t *testing.T) {
 				},
 			},
 			ExpectedString: `## [0.0.1] - 2021-05-19
+
 notice
 
 ### Changed
+
 - A
 - B
 
 ### Added
+
 - A:
 ` + "```yaml" + `
 this:
