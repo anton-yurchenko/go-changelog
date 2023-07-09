@@ -5,8 +5,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/anton-yurchenko/go-changelog"
 	"github.com/anton-yurchenko/go-changelog/mocks"
+
+	changelog "github.com/anton-yurchenko/go-changelog"
+
 	"github.com/pkg/errors"
 
 	"github.com/stretchr/testify/assert"

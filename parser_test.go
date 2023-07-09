@@ -4,8 +4,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/anton-yurchenko/go-changelog"
+	changelog "github.com/anton-yurchenko/go-changelog"
 	"github.com/anton-yurchenko/go-changelog/mocks"
+
 	"github.com/pkg/errors"
 
 	"github.com/spf13/afero"

@@ -3,7 +3,7 @@ package changelog_test
 import (
 	"testing"
 
-	"github.com/anton-yurchenko/go-changelog"
+	changelog "github.com/anton-yurchenko/go-changelog"
 
 	"github.com/stretchr/testify/assert"
 )
