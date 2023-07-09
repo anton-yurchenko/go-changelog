@@ -657,6 +657,22 @@ func TestCreateReleaseFromUnreleased(t *testing.T) {
 				Error:   "version 1.0.0 already exists",
 			},
 		},
+		"Missing Changes": {
+			Changelog: &changelog.Changelog{
+				Releases: changelog.Releases{
+					{
+						Version: stringP("0.0.1"),
+					},
+				},
+				Unreleased: &changelog.Release{},
+			},
+			Version: "1.0.0",
+			Date:    "2021-05-30",
+			Expected: expected{
+				Release: nil,
+				Error:   "missing 'Unreleased' section",
+			},
+		},
 	}
 
 	var counter int

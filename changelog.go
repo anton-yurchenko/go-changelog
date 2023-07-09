@@ -146,6 +146,10 @@ func (c *Changelog) GetRelease(version string) *Release {
 // CreateReleaseFromUnreleased creates a new release with all the changes from Unreleased section.
 // This will also cleanup the Unreleased section.
 func (c *Changelog) CreateReleaseFromUnreleased(version, date string) (*Release, error) {
+	if c.Unreleased == nil || c.Unreleased.Changes == nil {
+		return nil, errors.New("missing 'Unreleased' section")
+	}
+
 	r, err := c.CreateRelease(version, date)
 	if err != nil {
 		return nil, err
