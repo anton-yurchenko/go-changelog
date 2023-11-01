@@ -6,7 +6,7 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/spf13/afero v1.10.0
 	github.com/stretchr/testify v1.8.4
-	golang.org/x/mod v0.12.0
+	golang.org/x/mod v0.13.0
 )
 
 require (
